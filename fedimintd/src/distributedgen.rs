@@ -13,6 +13,7 @@ use fedimint_ln::LightningModuleConfigGen;
 use fedimint_mint::MintConfigGenerator;
 use fedimint_server::config::{PeerServerParams, ServerConfig, ServerConfigParams};
 use fedimint_server::multiplexed::PeerConnectionMultiplexer;
+use fedimint_storage::StorageConfigGenerator;
 use fedimint_wallet::WalletConfigGenerator;
 use itertools::Itertools;
 use rand::rngs::OsRng;

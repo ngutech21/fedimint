@@ -3,6 +3,7 @@ pub mod db;
 pub mod ln;
 pub mod mint;
 pub mod query;
+pub mod storage;
 pub mod transaction;
 pub mod utils;
 pub mod wallet;
@@ -56,6 +57,7 @@ use fedimint_core::{
     transaction::legacy::{Input, Output},
 };
 use fedimint_derive_secret::{ChildId, DerivableSecret};
+use fedimint_storage::config::StorageClientConfig;
 use futures::stream::FuturesUnordered;
 use futures::StreamExt;
 use lightning::ln::PaymentSecret;
@@ -69,6 +71,7 @@ use rand::prelude::*;
 use rand::{thread_rng, CryptoRng, Rng, RngCore};
 use secp256k1_zkp::{All, Secp256k1};
 use serde::{Deserialize, Serialize};
+use storage::StorageClient;
 use thiserror::Error;
 use threshold_crypto::PublicKey;
 use tracing::debug;
@@ -199,6 +202,16 @@ impl<T: AsRef<ClientConfig> + Clone> Client<T> {
                 .expect("needs lightning module client config")
                 .1,
             context: self.context.clone(),
+        }
+    }
+
+    pub fn storage_client(&self) -> StorageClient {
+        StorageClient {
+            config: self
+                .config
+                .as_ref()
+                .get_module::<StorageClientConfig>("storage")
+                .expect("needs storage module client config"),
         }
     }
 

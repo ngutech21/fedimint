@@ -11,6 +11,7 @@ use fedimint_api::Amount;
 use fedimint_ln::LightningModuleConfigGen;
 use fedimint_mint::MintConfigGenerator;
 use fedimint_server::config::ModuleInitRegistry;
+use fedimint_storage::StorageConfigGenerator;
 use fedimint_wallet::WalletConfigGenerator;
 use fedimintd::distributedgen::{create_cert, run_dkg};
 use fedimintd::encrypt::*;

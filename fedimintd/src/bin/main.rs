@@ -11,6 +11,7 @@ use fedimint_mint::MintConfigGenerator;
 use fedimint_server::config::ModuleInitRegistry;
 use fedimint_server::consensus::FedimintConsensus;
 use fedimint_server::FedimintServer;
+use fedimint_storage::StorageConfigGenerator;
 use fedimint_wallet::WalletConfigGenerator;
 use fedimintd::encrypt::*;
 use fedimintd::ui::run_ui;

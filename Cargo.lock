@@ -1240,6 +1240,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "fedimint-storage"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "fedimint-api",
+ "futures",
+ "impl-tools",
+ "rand",
+ "rayon",
+ "serde",
+ "strum",
+ "strum_macros",
+ "thiserror",
+]
+
+[[package]]
 name = "fedimint-testing"
 version = "0.1.0"
 dependencies = [
@@ -1338,6 +1355,7 @@ dependencies = [
  "fedimint-mint",
  "fedimint-rocksdb",
  "fedimint-server",
+ "fedimint-storage",
  "fedimint-wallet",
  "futures",
  "hbbft",
@@ -2523,6 +2541,7 @@ dependencies = [
  "fedimint-derive-secret",
  "fedimint-mint",
  "fedimint-rocksdb",
+ "fedimint-storage",
  "fedimint-testing",
  "futures",
  "hex",

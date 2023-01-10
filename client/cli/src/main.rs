@@ -107,6 +107,8 @@ enum CliOutput {
     },
 
     Backup,
+
+    Storage,
 }
 
 impl fmt::Display for CliOutput {
@@ -241,7 +243,9 @@ enum Command {
     },
 
     /// Pay a lightning invoice via a gateway
-    LnPay { bolt11: lightning_invoice::Invoice },
+    LnPay {
+        bolt11: lightning_invoice::Invoice,
+    },
 
     /// Fetch (re-)issued notes and finalize issuance process
     Fetch,
@@ -258,16 +262,22 @@ enum Command {
     },
 
     /// Wait for incoming invoice to be paid
-    WaitInvoice { invoice: lightning_invoice::Invoice },
+    WaitInvoice {
+        invoice: lightning_invoice::Invoice,
+    },
 
     /// Wait for the fed to reach a consensus block height
-    WaitBlockHeight { height: u64 },
+    WaitBlockHeight {
+        height: u64,
+    },
 
     /// Config enabling client to establish websocket connection to federation
     ConnectInfo,
 
     /// Join a federation using it's ConnectInfo
-    JoinFederation { connect: String },
+    JoinFederation {
+        connect: String,
+    },
 
     /// List registered gateways
     ListGateways,
@@ -295,6 +305,8 @@ enum Command {
     /// Wipe the notes data from the DB. Useful for testing backup & restore
     #[clap(hide = true)]
     WipeNotes,
+
+    Storage,
 }
 
 trait ErrorHandler<T, E> {
@@ -703,5 +715,9 @@ async fn handle_command(
                 Some(e.into()),
             )),
         },
+        Command::Storage => {
+            client.storage_client().say_hello();
+            Ok(CliOutput::Backup)
+        }
     }
 }
