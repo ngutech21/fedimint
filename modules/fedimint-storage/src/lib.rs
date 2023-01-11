@@ -31,6 +31,9 @@ pub mod common;
 pub mod config;
 pub mod db;
 
+use db::ExampleKey;
+use db::ExampleValue;
+
 #[derive(Debug)]
 pub struct StorageModule {
     pub cfg: StorageConfig,
@@ -276,12 +279,26 @@ impl ServerModulePlugin for StorageModule {
     }
 
     fn api_endpoints(&self) -> Vec<ApiEndpoint<Self>> {
-        vec![api_endpoint! {
-            "/storage",
-            async |_module: &StorageModule, _dbtx, _request: ()| -> () {
-                Ok(())
+        vec![
+            api_endpoint! {
+            "/store",
+            async |_module: &StorageModule, dbtx, param: u32| -> u32 {
+                println!("Storing {}", param);
+                let value = ExampleValue(param);
+                dbtx.insert_entry(&ExampleKey(1), &value).await.expect("Could not insert entry");
+                dbtx.commit_tx().await.expect("DB Error");
+                Ok(param)
             }
-        }]
+            },
+            api_endpoint! {
+            "/retrieve",
+            async |_module: &StorageModule, _dbtx, _request: ()| -> u32 {
+                let value = _dbtx.get_value(&ExampleKey(1)).await.expect("Could not get entry");
+                dbg!(&value);
+                Ok(value.unwrap().0)
+            }
+            },
+        ]
     }
 }
 

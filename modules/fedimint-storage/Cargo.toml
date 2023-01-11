@@ -22,3 +22,6 @@ strum = "0.24"
 strum_macros = "0.24"
 impl-tools = "0.6.1"
 thiserror = "1.0.37"
+
+[dev-dependencies]
+serde_json = "1.0.89"
