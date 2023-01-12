@@ -141,6 +141,7 @@ async fn main() {
         Arc::new(WalletConfigGenerator) as Arc<dyn ModuleInit + Send + Sync>,
         Arc::new(MintConfigGenerator),
         Arc::new(LightningModuleConfigGen),
+        Arc::new(StorageConfigGenerator),
     ]);
 
     let mut task_group = TaskGroup::new();

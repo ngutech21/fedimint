@@ -210,8 +210,9 @@ impl<T: AsRef<ClientConfig> + Clone> Client<T> {
             config: self
                 .config
                 .as_ref()
-                .get_module::<StorageClientConfig>("storage")
-                .expect("needs storage module client config"),
+                .get_module_by_kind::<StorageClientConfig>("storage")
+                .expect("needs storage module client config")
+                .1,
         }
     }
 

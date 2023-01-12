@@ -1,7 +1,5 @@
 use fedimint_api::{
-    core::{client::ClientModulePlugin, ModuleKey, MODULE_KEY_STORAGE},
-    module::TransactionItemAmount,
-    Amount, ServerModulePlugin,
+    core::client::ClientModule, module::TransactionItemAmount, Amount, ServerModule,
 };
 use fedimint_storage::{common::StorageModuleDecoder, config::StorageClientConfig, StorageModule};
 
@@ -10,17 +8,18 @@ pub struct StorageClient {
     pub config: StorageClientConfig,
 }
 
-impl ClientModulePlugin for StorageClient {
-    type Decoder = <StorageModule as ServerModulePlugin>::Decoder;
+impl ClientModule for StorageClient {
+    type Decoder = <StorageModule as ServerModule>::Decoder;
     type Module = StorageModule;
-    const MODULE_KEY: ModuleKey = MODULE_KEY_STORAGE;
+    const KIND: &'static str = "storage";
 
-    fn decoder(&self) -> &'static Self::Decoder {
-        &StorageModuleDecoder
+    fn decoder(&self) -> Self::Decoder {
+        StorageModuleDecoder
     }
+
     fn input_amount(
         &self,
-        _input: &<Self::Module as fedimint_api::ServerModulePlugin>::Input,
+        _input: &<Self::Module as fedimint_api::ServerModule>::Input,
     ) -> fedimint_api::module::TransactionItemAmount {
         TransactionItemAmount {
             amount: Amount::ZERO,
@@ -30,7 +29,7 @@ impl ClientModulePlugin for StorageClient {
 
     fn output_amount(
         &self,
-        _output: &<Self::Module as fedimint_api::ServerModulePlugin>::Output,
+        _output: &<Self::Module as fedimint_api::ServerModule>::Output,
     ) -> fedimint_api::module::TransactionItemAmount {
         TransactionItemAmount {
             amount: Amount::ZERO,

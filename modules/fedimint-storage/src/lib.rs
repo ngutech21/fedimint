@@ -9,7 +9,7 @@ use fedimint_api::config::{
     ClientModuleConfig, ConfigGenParams, DkgPeerMsg, ModuleConfigGenParams, ServerModuleConfig,
     TypedServerModuleConfig,
 };
-use fedimint_api::core::{Decoder, ModuleKey};
+use fedimint_api::core::{Decoder, ModuleInstanceId, ModuleKind};
 use fedimint_api::db::{Database, DatabaseTransaction};
 use fedimint_api::encoding::{Decodable, Encodable};
 use fedimint_api::module::__reexports::serde_json;
@@ -19,9 +19,9 @@ use fedimint_api::module::{
     api_endpoint, ApiEndpoint, InputMeta, ModuleError, ModuleInit, TransactionItemAmount,
 };
 use fedimint_api::net::peers::MuxPeerConnections;
-use fedimint_api::server::ServerModule;
+use fedimint_api::server::DynServerModule;
 use fedimint_api::task::TaskGroup;
-use fedimint_api::{plugin_types_trait_impl, OutPoint, PeerId, ServerModulePlugin};
+use fedimint_api::{plugin_types_trait_impl, OutPoint, PeerId, ServerModule};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -30,6 +30,8 @@ use crate::config::{StorageConfig, StorageConfigConsensus, StorageConfigPrivate}
 pub mod common;
 pub mod config;
 pub mod db;
+
+const KIND: ModuleKind = ModuleKind::from_static_str("storage");
 
 use db::ExampleKey;
 use db::ExampleValue;
@@ -54,12 +56,16 @@ impl ModuleInit for StorageConfigGenerator {
         cfg: ServerModuleConfig,
         _db: Database,
         _task_group: &mut TaskGroup,
-    ) -> anyhow::Result<ServerModule> {
+    ) -> anyhow::Result<DynServerModule> {
         Ok(StorageModule::new(cfg.to_typed()?).into())
     }
 
-    fn decoder(&self) -> (ModuleKey, Decoder) {
-        (MODULE_KEY_STORAGE, (&StorageModuleDecoder).into())
+    fn module_kind(&self) -> ModuleKind {
+        ModuleKind::from_static_str("storage")
+    }
+
+    fn decoder(&self) -> Decoder {
+        Decoder::from_typed(StorageModuleDecoder)
     }
 
     fn trusted_dealer_gen(
@@ -92,10 +98,11 @@ impl ModuleInit for StorageConfigGenerator {
 
     async fn distributed_gen(
         &self,
-        _connections: &MuxPeerConnections<ModuleKey, DkgPeerMsg>,
+        _connections: &MuxPeerConnections<ModuleInstanceId, DkgPeerMsg>,
         _our_id: &PeerId,
+        _instance_id: ModuleInstanceId,
         _peers: &[PeerId],
-        _params: &ConfigGenParams,
+        params: &ConfigGenParams,
         _task_group: &mut TaskGroup,
     ) -> anyhow::Result<Cancellable<ServerModuleConfig>> {
         // FIXME
@@ -180,7 +187,8 @@ impl fmt::Display for StorageOutputConfirmation {
 }
 
 #[async_trait]
-impl ServerModulePlugin for StorageModule {
+impl ServerModule for StorageModule {
+    const KIND: ModuleKind = KIND;
     type Decoder = StorageModuleDecoder;
     type Input = StorageInput;
     type Output = StorageOutput;
@@ -188,12 +196,8 @@ impl ServerModulePlugin for StorageModule {
     type ConsensusItem = StorageOutputConfirmation;
     type VerificationCache = StorageVerificationCache;
 
-    fn module_key(&self) -> ModuleKey {
-        MODULE_KEY_STORAGE
-    }
-
-    fn decoder(&self) -> &'static Self::Decoder {
-        &StorageModuleDecoder
+    fn decoder(&self) -> Self::Decoder {
+        StorageModuleDecoder
     }
 
     async fn await_consensus_proposal(&self, _dbtx: &mut DatabaseTransaction<'_>) {}
@@ -273,10 +277,6 @@ impl ServerModulePlugin for StorageModule {
     }
 
     async fn audit(&self, _dbtx: &mut DatabaseTransaction<'_>, _audit: &mut Audit) {}
-
-    fn api_base_name(&self) -> &'static str {
-        "storage"
-    }
 
     fn api_endpoints(&self) -> Vec<ApiEndpoint<Self>> {
         vec![

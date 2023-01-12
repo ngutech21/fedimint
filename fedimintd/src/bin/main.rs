@@ -125,6 +125,7 @@ async fn main() -> anyhow::Result<()> {
         Arc::new(WalletConfigGenerator) as Arc<dyn ModuleInit + Send + Sync>,
         Arc::new(MintConfigGenerator),
         Arc::new(LightningModuleConfigGen),
+        Arc::new(StorageConfigGenerator),
     ]);
 
     let decoders = module_inits.decoders(cfg.module_kinds_iter())?;

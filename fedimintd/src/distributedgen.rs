@@ -91,6 +91,7 @@ pub async fn run_dkg(
         Arc::new(WalletConfigGenerator) as Arc<dyn ModuleInit + Send + Sync>,
         Arc::new(MintConfigGenerator),
         Arc::new(LightningModuleConfigGen),
+        Arc::new(StorageConfigGenerator),
     ]);
 
     let result = ServerConfig::distributed_gen(
