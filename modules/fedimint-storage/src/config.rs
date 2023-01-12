@@ -38,16 +38,6 @@ impl TypedClientModuleConfig for StorageClientConfig {
     }
 }
 
-// impl TypedServerModuleConsensusConfig for StorageConfigConsensus {
-//     fn to_client_config(&self) -> ClientModuleConfig {
-//         serde_json::to_value(&StorageClientConfig {
-//             something: self.something,
-//         })
-//         .expect("Serialization can't fail")
-//         .into()
-//     }
-// }
-
 impl TypedServerModuleConsensusConfig for StorageConfigConsensus {
     fn to_client_config(&self) -> ClientModuleConfig {
         ClientModuleConfig::new(
