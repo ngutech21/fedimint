@@ -51,33 +51,17 @@ impl ClientModule for StorageClient {
 }
 
 impl StorageClient {
-    pub fn say_hello(&self) {
-        println!(">>>> Hello from StorageClient!");
-    }
-
     pub async fn store_data(&self, value: String) -> Result<String, StorageClientError> {
-        // FIXME use result
-
         let key = uuid::Uuid::new_v4().hyphenated().to_string();
 
-        match self.context.api.store_data(key, value).await {
-            Ok(res) => Ok(res),
+        // FIXME use result
+        match self.context.api.store_data(key.clone(), value).await {
+            Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
-
-        // let _res = self
-        //     .context
-        //     .api
-        //     .store_data(value)
-        //     .await
-        //     .map_err(|_e| StorageClientError::ApiError); // FIXME use result
-        // Ok(())
-        //println!(">>>> Storing data!");
     }
 
     pub async fn retrieve_data(&self, key: String) -> Result<String, StorageClientError> {
-        println!(">>>> Retrieving data!");
-
         match self.context.api.retrieve_data(key).await {
             Ok(res) => Ok(res),
             Err(e) => Err(StorageClientError::ApiError(e)),

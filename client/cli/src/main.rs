@@ -108,7 +108,9 @@ enum CliOutput {
 
     Backup,
 
-    Storage,
+    StoreData {
+        key: String,
+    },
 
     RetrieveData {
         data: String,
@@ -726,7 +728,7 @@ async fn handle_command(
             )),
         },
         Command::StoreData { value } => match client.storage_client().store_data(value).await {
-            Ok(_) => Ok(CliOutput::Storage),
+            Ok(key) => Ok(CliOutput::StoreData { key }),
             Err(e) => Err(CliError::from(
                 CliErrorKind::GeneralFederationError,
                 "failed",
