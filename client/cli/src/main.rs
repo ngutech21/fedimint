@@ -109,6 +109,10 @@ enum CliOutput {
     Backup,
 
     Storage,
+
+    RetrieveData {
+        data: u32,
+    },
 }
 
 impl fmt::Display for CliOutput {
@@ -306,7 +310,11 @@ enum Command {
     #[clap(hide = true)]
     WipeNotes,
 
-    StoreData,
+    StoreData {
+        value: u32,
+    },
+
+    RetrieveData,
 }
 
 trait ErrorHandler<T, E> {
@@ -715,8 +723,17 @@ async fn handle_command(
                 Some(e.into()),
             )),
         },
-        Command::StoreData => match client.storage_client().store_data(108).await {
+        Command::StoreData { value } => match client.storage_client().store_data(value).await {
             Ok(_) => Ok(CliOutput::Storage),
+            Err(e) => Err(CliError::from(
+                CliErrorKind::GeneralFederationError,
+                "failed",
+                Some(e.into()),
+            )),
+        },
+
+        Command::RetrieveData => match client.storage_client().retrieve_data().await {
+            Ok(v) => Ok(CliOutput::RetrieveData { data: v }),
             Err(e) => Err(CliError::from(
                 CliErrorKind::GeneralFederationError,
                 "failed",

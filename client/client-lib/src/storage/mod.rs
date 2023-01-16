@@ -6,7 +6,7 @@ use fedimint_api::{
 use fedimint_storage::{common::StorageModuleDecoder, config::StorageClientConfig, StorageModule};
 use thiserror::Error;
 
-use crate::utils::ClientContext;
+use crate::{api::ApiError, utils::ClientContext};
 
 #[derive(Debug)]
 pub struct StorageClient {
@@ -16,8 +16,8 @@ pub struct StorageClient {
 
 #[derive(Debug, Error)]
 pub enum StorageClientError {
-    #[error("ApiError")]
-    ApiError,
+    #[error("Error querying federation: {0}")]
+    ApiError(#[from] ApiError),
 }
 
 impl ClientModule for StorageClient {
@@ -57,29 +57,28 @@ impl StorageClient {
 
     pub async fn store_data(&self, value: u32) -> Result<(), StorageClientError> {
         // FIXME use result
-        let _res = self
-            .context
-            .api
-            .store_data(value)
-            .await
-            .map_err(|_e| StorageClientError::ApiError); // FIXME use result
-        Ok(())
+
+        match self.context.api.store_data(value).await {
+            Ok(res) => Ok(res),
+            Err(e) => Err(StorageClientError::ApiError(e)),
+        }
+
+        // let _res = self
+        //     .context
+        //     .api
+        //     .store_data(value)
+        //     .await
+        //     .map_err(|_e| StorageClientError::ApiError); // FIXME use result
+        // Ok(())
         //println!(">>>> Storing data!");
-
-        // let ws_api = WsFederationApi::from_config(client.config().as_ref());
-        //     let response: Value = ws_api
-        //         .request(
-        //             &method,
-        //             arg,
-        //             EventuallyConsistent::new(ws_api.peers().len()),
-        //         )
-        //         .await
-        //         .unwrap();
-
-        //     Ok(CliOutput::UntypedApiOutput { value: response })
     }
 
-    pub fn retrieve_data(&self) {
+    pub async fn retrieve_data(&self) -> Result<u32, StorageClientError> {
         println!(">>>> Retrieving data!");
+
+        match self.context.api.retrieve_data().await {
+            Ok(res) => Ok(res),
+            Err(e) => Err(StorageClientError::ApiError(e)),
+        }
     }
 }

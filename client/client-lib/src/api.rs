@@ -103,6 +103,8 @@ pub trait IFederationApi: Debug + Send + Sync {
     ) -> Result<Vec<ECashUserBackupSnapshot>>;
 
     async fn store_data(&self, value: u32) -> Result<()>;
+
+    async fn retrieve_data(&self) -> Result<u32>;
 }
 
 dyn_newtype_define! {
@@ -242,8 +244,18 @@ impl<C: JsonRpcClient + Debug + Send + Sync> IFederationApi for WsFederationApi<
     async fn store_data(&self, value: u32) -> Result<()> {
         println!("WSFederationAPI store_data");
         self.request(
-            "/store_data",
+            &format!("/module/{}/store_data", 3),
             value,
+            CurrentConsensus::new(self.peers().one_honest()),
+        )
+        .await
+    }
+
+    async fn retrieve_data(&self) -> Result<u32> {
+        println!("WSFederationAPI store_data");
+        self.request(
+            &format!("/module/{}/retrieve_data", 3),
+            (),
             CurrentConsensus::new(self.peers().one_honest()),
         )
         .await

@@ -248,6 +248,10 @@ mod tests {
             unimplemented!()
         }
 
+        async fn retrieve_data(&self) -> crate::api::Result<u32> {
+            unimplemented!()
+        }
+
         async fn submit_transaction(
             &self,
             _tx: LegacyTransaction,

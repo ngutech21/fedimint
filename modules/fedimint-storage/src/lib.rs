@@ -294,10 +294,9 @@ impl ServerModule for StorageModule {
             },
             api_endpoint! {
             "/retrieve_data",
-            async |_module: &StorageModule, _dbtx, _request: ()| -> u32 {
-                let value = _dbtx.get_value(&ExampleKey(1)).await.expect("Could not get entry");
-                dbg!(&value);
-                Ok(value.unwrap().0)
+            async |module: &StorageModule, _dbtx, _request: ()| -> u32 {
+                let value = module.retrieve(&mut _dbtx, 0).await.expect("Could not retrieve data");
+                Ok(value)
             }
             },
         ]
@@ -321,6 +320,20 @@ impl StorageModule {
             .await
             .expect("Could not insert entry");
         Ok(())
+    }
+
+    pub async fn retrieve(
+        &self,
+        dbtx: &mut DatabaseTransaction<'_>,
+        param: u32,
+    ) -> Result<u32, StorageError> {
+        println!("Retrieving {}", param);
+        let value = dbtx
+            .get_value(&ExampleKey(1))
+            .await
+            .expect("Could not get entry");
+        dbg!(&value);
+        Ok(value.unwrap().0)
     }
 }
 

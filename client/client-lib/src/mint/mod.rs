@@ -700,6 +700,10 @@ mod tests {
             unimplemented!()
         }
 
+        async fn retrieve_data(&self) -> crate::api::Result<u32> {
+            unimplemented!()
+        }
+
         async fn fetch_tx_outcome(
             &self,
             tx: TransactionId,

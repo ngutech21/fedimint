@@ -36,6 +36,10 @@ impl IFederationApi for MockApi {
         unimplemented!()
     }
 
+    async fn retrieve_data(&self) -> Result<u32, ApiError> {
+        unimplemented!()
+    }
+
     async fn fetch_tx_outcome(&self, _tx: TransactionId) -> Result<TransactionStatus, ApiError> {
         unimplemented!()
     }
