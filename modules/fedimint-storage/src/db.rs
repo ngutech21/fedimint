@@ -16,12 +16,26 @@ impl std::fmt::Display for DbKeyPrefix {
 }
 
 #[derive(Debug, Clone, Encodable, Decodable, Eq, PartialEq, Hash, Serialize)]
-pub struct ExampleKey(pub u64);
+pub struct UUIDKey(pub String);
 
-impl DatabaseKeyPrefixConst for ExampleKey {
+impl UUIDKey {
+    pub fn new() -> Self {
+        let my_uuid = uuid::Uuid::new_v4();
+        let urn = my_uuid.hyphenated().to_string();
+        Self(urn)
+    }
+}
+
+impl From<String> for UUIDKey {
+    fn from(s: String) -> Self {
+        Self(s)
+    }
+}
+
+impl DatabaseKeyPrefixConst for UUIDKey {
     const DB_PREFIX: u8 = DbKeyPrefix::Example as u8;
     type Key = Self;
-    type Value = ExampleValue;
+    type Value = StringValue;
 }
 
 #[derive(Debug, Encodable, Decodable)]
@@ -29,9 +43,9 @@ pub struct ExampleKeyPrefix;
 
 impl DatabaseKeyPrefixConst for ExampleKeyPrefix {
     const DB_PREFIX: u8 = DbKeyPrefix::Example as u8;
-    type Key = ExampleKey;
-    type Value = ExampleValue;
+    type Key = UUIDKey;
+    type Value = StringValue;
 }
 
 #[derive(Debug, Encodable, Decodable)]
-pub struct ExampleValue(pub u32);
+pub struct StringValue(pub String);

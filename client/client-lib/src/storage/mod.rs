@@ -55,7 +55,7 @@ impl StorageClient {
         println!(">>>> Hello from StorageClient!");
     }
 
-    pub async fn store_data(&self, value: u32) -> Result<(), StorageClientError> {
+    pub async fn store_data(&self, value: String) -> Result<String, StorageClientError> {
         // FIXME use result
 
         match self.context.api.store_data(value).await {
@@ -73,10 +73,10 @@ impl StorageClient {
         //println!(">>>> Storing data!");
     }
 
-    pub async fn retrieve_data(&self) -> Result<u32, StorageClientError> {
+    pub async fn retrieve_data(&self, key: String) -> Result<String, StorageClientError> {
         println!(">>>> Retrieving data!");
 
-        match self.context.api.retrieve_data().await {
+        match self.context.api.retrieve_data(key).await {
             Ok(res) => Ok(res),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }

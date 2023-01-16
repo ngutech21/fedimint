@@ -33,8 +33,8 @@ pub mod db;
 
 const KIND: ModuleKind = ModuleKind::from_static_str("storage");
 
-use db::ExampleKey;
-use db::ExampleValue;
+use db::StringValue;
+use db::UUIDKey;
 
 #[derive(Debug)]
 pub struct StorageModule {
@@ -286,17 +286,16 @@ impl ServerModule for StorageModule {
         vec![
             api_endpoint! {
             "/store_data",
-            async |module: &StorageModule, dbtx, param: u32| -> u32 {
+            async |module: &StorageModule, dbtx, param: String| -> String {
                 let result = module.store(&mut dbtx, param).await; // FIXME use result
                 dbtx.commit_tx().await.expect("DB Error");
-                Ok(param)
+                Ok(result.unwrap().0)
             }
             },
             api_endpoint! {
             "/retrieve_data",
-            async |module: &StorageModule, _dbtx, _request: ()| -> u32 {
-                let value = module.retrieve(&mut _dbtx, 0).await.expect("Could not retrieve data");
-                Ok(value)
+            async |module: &StorageModule, _dbtx, key: String| -> String {
+                Ok(module.retrieve(&mut _dbtx, key).await.expect("Could not retrieve data"))
             }
             },
         ]
@@ -312,24 +311,27 @@ impl StorageModule {
     pub async fn store(
         &self,
         dbtx: &mut DatabaseTransaction<'_>,
-        param: u32,
-    ) -> Result<(), StorageError> {
-        println!("Storing {}", param);
-        let value = ExampleValue(param);
-        dbtx.insert_entry(&ExampleKey(1), &value)
+        param: String,
+    ) -> Result<UUIDKey, StorageError> {
+        let value = StringValue(param);
+        let key = UUIDKey::new();
+        println!("Storing {:?} {:?}", &value, &key);
+        let result = dbtx
+            .insert_entry(&key, &value)
             .await
             .expect("Could not insert entry");
-        Ok(())
+        dbg!(&result);
+        Ok(key)
     }
 
     pub async fn retrieve(
         &self,
         dbtx: &mut DatabaseTransaction<'_>,
-        param: u32,
-    ) -> Result<u32, StorageError> {
+        param: String,
+    ) -> Result<String, StorageError> {
         println!("Retrieving {}", param);
         let value = dbtx
-            .get_value(&ExampleKey(1))
+            .get_value(&UUIDKey::from(param))
             .await
             .expect("Could not get entry");
         dbg!(&value);

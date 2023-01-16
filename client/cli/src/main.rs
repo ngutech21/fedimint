@@ -111,7 +111,7 @@ enum CliOutput {
     Storage,
 
     RetrieveData {
-        data: u32,
+        data: String,
     },
 }
 
@@ -311,10 +311,12 @@ enum Command {
     WipeNotes,
 
     StoreData {
-        value: u32,
+        value: String,
     },
 
-    RetrieveData,
+    RetrieveData {
+        key: String,
+    },
 }
 
 trait ErrorHandler<T, E> {
@@ -732,7 +734,7 @@ async fn handle_command(
             )),
         },
 
-        Command::RetrieveData => match client.storage_client().retrieve_data().await {
+        Command::RetrieveData { key } => match client.storage_client().retrieve_data(key).await {
             Ok(v) => Ok(CliOutput::RetrieveData { data: v }),
             Err(e) => Err(CliError::from(
                 CliErrorKind::GeneralFederationError,
