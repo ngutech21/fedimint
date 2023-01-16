@@ -370,7 +370,7 @@ mod tests {
             unimplemented!()
         }
 
-        async fn retrieve_data(&self, key: String) -> crate::api::Result<String> {
+        async fn retrieve_data(&self, _key: String) -> crate::api::Result<String> {
             unimplemented!()
         }
 

@@ -5,7 +5,6 @@ use fedimint_storage::{
     StorageModule,
 };
 use serde_json::json;
-use uuid::Uuid;
 
 fn open_temp_db(temp_path: &str) -> RocksDb {
     let path = tempfile::Builder::new()
@@ -17,19 +16,12 @@ fn open_temp_db(temp_path: &str) -> RocksDb {
 }
 
 #[test]
-fn simple_test() {
+fn json_test() {
     println!("Hello, world!");
-    let v = json!("a string");
+    let _v = json!("a string");
     //let result = serde_json::from_str::<serde_json::Value>(r#" {"param": "1"} "#).unwrap();
     let result = serde_json::from_str::<serde_json::Value>(r#" 1  "#).unwrap();
     println!("result: {:?}", result);
-}
-
-#[test]
-fn uuid_test() {
-    let my_uuid = Uuid::new_v4();
-    let urn = my_uuid.hyphenated().to_string();
-    println!("{}", my_uuid.urn());
 }
 
 #[test_log::test(tokio::test)]
