@@ -102,7 +102,7 @@ pub trait IFederationApi: Debug + Send + Sync {
         id: &secp256k1::XOnlyPublicKey,
     ) -> Result<Vec<ECashUserBackupSnapshot>>;
 
-    async fn store_data(&self, value: String) -> Result<String>;
+    async fn store_data(&self, key: String, value: String) -> Result<String>;
 
     async fn retrieve_data(&self, key: String) -> Result<String>;
 }
@@ -241,21 +241,21 @@ impl ApiError {
 #[cfg_attr(target_family = "wasm", async_trait(? Send))]
 #[cfg_attr(not(target_family = "wasm"), async_trait)]
 impl<C: JsonRpcClient + Debug + Send + Sync> IFederationApi for WsFederationApi<C> {
-    async fn store_data(&self, value: String) -> Result<String> {
+    async fn store_data(&self, key: String, value: String) -> Result<String> {
         println!("WSFederationAPI store_data");
         self.request(
             &format!("/module/{}/store_data", 3),
-            value,
+            (key, value),
             CurrentConsensus::new(self.peers().one_honest()),
         )
         .await
     }
 
     async fn retrieve_data(&self, key: String) -> Result<String> {
-        println!("WSFederationAPI store_data");
+        println!("WSFederationAPI retrieve_data");
         self.request(
             &format!("/module/{}/retrieve_data", 3),
-            (),
+            key,
             CurrentConsensus::new(self.peers().one_honest()),
         )
         .await

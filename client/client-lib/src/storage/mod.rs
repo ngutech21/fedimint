@@ -58,7 +58,9 @@ impl StorageClient {
     pub async fn store_data(&self, value: String) -> Result<String, StorageClientError> {
         // FIXME use result
 
-        match self.context.api.store_data(value).await {
+        let key = uuid::Uuid::new_v4().hyphenated().to_string();
+
+        match self.context.api.store_data(key, value).await {
             Ok(res) => Ok(res),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }

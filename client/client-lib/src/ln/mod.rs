@@ -366,7 +366,7 @@ mod tests {
 
     #[async_trait]
     impl IFederationApi for FakeApi {
-        async fn store_data(&self, _value: String) -> crate::api::Result<String> {
+        async fn store_data(&self, _key: String, _value: String) -> crate::api::Result<String> {
             unimplemented!()
         }
 

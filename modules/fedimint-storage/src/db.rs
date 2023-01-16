@@ -26,6 +26,12 @@ impl UUIDKey {
     }
 }
 
+impl Default for UUIDKey {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl From<String> for UUIDKey {
     fn from(s: String) -> Self {
         Self(s)

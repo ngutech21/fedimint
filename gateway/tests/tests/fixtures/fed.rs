@@ -32,7 +32,7 @@ impl MockApi {
 
 #[async_trait]
 impl IFederationApi for MockApi {
-    async fn store_data(&self, _value: String) -> Result<String, ApiError> {
+    async fn store_data(&self, _key: String, _value: String) -> Result<String, ApiError> {
         unimplemented!()
     }
 

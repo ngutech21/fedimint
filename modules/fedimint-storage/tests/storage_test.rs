@@ -49,7 +49,8 @@ async fn store_and_retrieve_test() {
 
     let module = StorageModule { cfg };
     let value = "Hello, world!".to_string();
-    let store_result = module.store(&mut tx, value).await.unwrap();
+    let key = uuid::Uuid::new_v4().hyphenated().to_string();
+    let store_result = module.store(&mut tx, key, value).await.unwrap();
     tx.commit_tx().await.expect("DB Error");
     dbg!(&store_result);
 

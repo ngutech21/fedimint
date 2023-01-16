@@ -102,7 +102,7 @@ impl ModuleInit for StorageConfigGenerator {
         _our_id: &PeerId,
         _instance_id: ModuleInstanceId,
         _peers: &[PeerId],
-        params: &ConfigGenParams,
+        _params: &ConfigGenParams,
         _task_group: &mut TaskGroup,
     ) -> anyhow::Result<Cancellable<ServerModuleConfig>> {
         // FIXME
@@ -286,8 +286,8 @@ impl ServerModule for StorageModule {
         vec![
             api_endpoint! {
             "/store_data",
-            async |module: &StorageModule, dbtx, param: String| -> String {
-                let result = module.store(&mut dbtx, param).await; // FIXME use result
+            async |module: &StorageModule, dbtx, params: (String,String)| -> String {
+                let result = module.store(&mut dbtx, params.0, params.1).await; // FIXME use result
                 dbtx.commit_tx().await.expect("DB Error");
                 Ok(result.unwrap().0)
             }
@@ -311,11 +311,12 @@ impl StorageModule {
     pub async fn store(
         &self,
         dbtx: &mut DatabaseTransaction<'_>,
-        param: String,
+        key: String,
+        value: String,
     ) -> Result<UUIDKey, StorageError> {
-        let value = StringValue(param);
-        let key = UUIDKey::new();
-        println!("Storing {:?} {:?}", &value, &key);
+        let value = StringValue(value);
+        let key = UUIDKey::from(key);
+        println!("Storing {:?} {:?}", &key, &value);
         let result = dbtx
             .insert_entry(&key, &value)
             .await
