@@ -306,7 +306,7 @@ enum Command {
     #[clap(hide = true)]
     WipeNotes,
 
-    Storage,
+    StoreData,
 }
 
 trait ErrorHandler<T, E> {
@@ -715,9 +715,13 @@ async fn handle_command(
                 Some(e.into()),
             )),
         },
-        Command::Storage => {
-            client.storage_client().say_hello();
-            Ok(CliOutput::Backup)
-        }
+        Command::StoreData => match client.storage_client().store_data(108).await {
+            Ok(_) => Ok(CliOutput::Storage),
+            Err(e) => Err(CliError::from(
+                CliErrorKind::GeneralFederationError,
+                "failed",
+                Some(e.into()),
+            )),
+        },
     }
 }

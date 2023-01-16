@@ -244,6 +244,10 @@ mod tests {
             })
         }
 
+        async fn store_data(&self, value: u32) -> crate::api::Result<()> {
+            unimplemented!()
+        }
+
         async fn submit_transaction(
             &self,
             _tx: LegacyTransaction,

@@ -32,6 +32,10 @@ impl MockApi {
 
 #[async_trait]
 impl IFederationApi for MockApi {
+    async fn store_data(&self, _value: u32) -> Result<(), ApiError> {
+        unimplemented!()
+    }
+
     async fn fetch_tx_outcome(&self, _tx: TransactionId) -> Result<TransactionStatus, ApiError> {
         unimplemented!()
     }

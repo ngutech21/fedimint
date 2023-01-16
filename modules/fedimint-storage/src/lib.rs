@@ -285,17 +285,15 @@ impl ServerModule for StorageModule {
     fn api_endpoints(&self) -> Vec<ApiEndpoint<Self>> {
         vec![
             api_endpoint! {
-            "/store",
-            async |_module: &StorageModule, dbtx, param: u32| -> u32 {
-                println!("Storing {}", param);
-                let value = ExampleValue(param);
-                dbtx.insert_entry(&ExampleKey(1), &value).await.expect("Could not insert entry");
+            "/store_data",
+            async |module: &StorageModule, dbtx, param: u32| -> u32 {
+                let result = module.store(&mut dbtx, param).await; // FIXME use result
                 dbtx.commit_tx().await.expect("DB Error");
                 Ok(param)
             }
             },
             api_endpoint! {
-            "/retrieve",
+            "/retrieve_data",
             async |_module: &StorageModule, _dbtx, _request: ()| -> u32 {
                 let value = _dbtx.get_value(&ExampleKey(1)).await.expect("Could not get entry");
                 dbg!(&value);
@@ -310,6 +308,19 @@ impl StorageModule {
     /// Create new module instance
     pub fn new(cfg: StorageConfig) -> StorageModule {
         StorageModule { cfg }
+    }
+
+    pub async fn store(
+        &self,
+        dbtx: &mut DatabaseTransaction<'_>,
+        param: u32,
+    ) -> Result<(), StorageError> {
+        println!("Storing {}", param);
+        let value = ExampleValue(param);
+        dbtx.insert_entry(&ExampleKey(1), &value)
+            .await
+            .expect("Could not insert entry");
+        Ok(())
     }
 }
 

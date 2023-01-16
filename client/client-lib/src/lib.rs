@@ -142,6 +142,7 @@ impl From<GatewayClientConfig> for LightningGateway {
     }
 }
 
+#[derive(Debug)]
 pub struct Client<C> {
     config: C,
     context: Arc<ClientContext>,
@@ -213,6 +214,7 @@ impl<T: AsRef<ClientConfig> + Clone> Client<T> {
                 .get_module_by_kind::<StorageClientConfig>("storage")
                 .expect("needs storage module client config")
                 .1,
+            context: self.context.clone(),
         }
     }
 

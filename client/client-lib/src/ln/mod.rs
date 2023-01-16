@@ -366,6 +366,10 @@ mod tests {
 
     #[async_trait]
     impl IFederationApi for FakeApi {
+        async fn store_data(&self, value: u32) -> crate::api::Result<()> {
+            unimplemented!()
+        }
+
         async fn fetch_tx_outcome(
             &self,
             tx: TransactionId,
