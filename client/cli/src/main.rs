@@ -112,9 +112,7 @@ enum CliOutput {
         key: String,
     },
 
-    RetrieveData {
-        data: String,
-    },
+    RetrieveData,
 }
 
 impl fmt::Display for CliOutput {
@@ -313,11 +311,12 @@ enum Command {
     WipeNotes,
 
     StoreData {
-        value: String,
+        file: PathBuf,
     },
 
     RetrieveData {
         key: String,
+        file: PathBuf,
     },
 }
 
@@ -727,7 +726,7 @@ async fn handle_command(
                 Some(e.into()),
             )),
         },
-        Command::StoreData { value } => match client.storage_client().store_data(value).await {
+        Command::StoreData { file } => match client.storage_client().store_data(file).await {
             Ok(key) => Ok(CliOutput::StoreData { key }),
             Err(e) => Err(CliError::from(
                 CliErrorKind::GeneralFederationError,
@@ -736,13 +735,15 @@ async fn handle_command(
             )),
         },
 
-        Command::RetrieveData { key } => match client.storage_client().retrieve_data(key).await {
-            Ok(v) => Ok(CliOutput::RetrieveData { data: v }),
-            Err(e) => Err(CliError::from(
-                CliErrorKind::GeneralFederationError,
-                "failed",
-                Some(e.into()),
-            )),
-        },
+        Command::RetrieveData { key, file } => {
+            match client.storage_client().retrieve_data(key, file).await {
+                Ok(_) => Ok(CliOutput::RetrieveData),
+                Err(e) => Err(CliError::from(
+                    CliErrorKind::GeneralFederationError,
+                    "failed",
+                    Some(e.into()),
+                )),
+            }
+        }
     }
 }

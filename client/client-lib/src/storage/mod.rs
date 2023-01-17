@@ -1,5 +1,8 @@
+use std::fs;
+use std::path::PathBuf;
 use std::sync::Arc;
 
+use base64::{engine::general_purpose, Engine as _};
 use fedimint_api::{
     core::client::ClientModule, module::TransactionItemAmount, Amount, ServerModule,
 };
@@ -51,20 +54,70 @@ impl ClientModule for StorageClient {
 }
 
 impl StorageClient {
-    pub async fn store_data(&self, value: String) -> Result<String, StorageClientError> {
+    pub async fn store_data(&self, file: PathBuf) -> Result<String, StorageClientError> {
+        dbg!(&file);
+
         let key = uuid::Uuid::new_v4().hyphenated().to_string();
 
-        // FIXME use result
-        match self.context.api.store_data(key.clone(), value).await {
+        let content = self.read_file_as_base64(file);
+        dbg!(&content);
+        match self.context.api.store_data(key.clone(), content).await {
             Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
+
+        // FIXME use result
     }
 
-    pub async fn retrieve_data(&self, key: String) -> Result<String, StorageClientError> {
+    pub async fn retrieve_data(
+        &self,
+        key: String,
+        file: PathBuf,
+    ) -> Result<(), StorageClientError> {
         match self.context.api.retrieve_data(key).await {
-            Ok(res) => Ok(res),
+            Ok(res) => {
+                self.write_file_from_base64(res, file);
+                Ok(())
+            }
+
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
     }
+
+    pub fn read_file_as_base64(&self, file_name: PathBuf) -> String {
+        let file_content = fs::read(file_name).expect("The file could not be read");
+        general_purpose::STANDARD_NO_PAD.encode(file_content)
+    }
+
+    pub fn write_file_from_base64(&self, base64_content: String, file_name: PathBuf) {
+        let file_content = general_purpose::STANDARD_NO_PAD
+            .decode(base64_content)
+            .expect("The file could not be read");
+        fs::write(file_name, file_content).expect("The file could not be read");
+    }
 }
+
+// mod tests{
+
+//     use crate::api::DynFederationApi;
+
+//     use super::*;
+
+//     #[test]
+//     fn test_read_file_as_base64() {
+//         StorageClient{
+//             config: StorageClientConfig{
+//                 something: 42,
+//             },
+//             context: Arc::new(ClientContext{
+//                 api: DynFederationApi(Arc::new(FederationApiMock)))
+//             }),
+//         }.read_file_as_base64("dummy.txt".to_string());
+
+//         let file_content = fs::read("dummy.txt").expect("The file could not be read");
+//         let base = general_purpose::STANDARD_NO_PAD.encode(file_content);
+//         dbg!(base);
+//         let file_content = general_purpose::STANDARD_NO_PAD.decode(base).expect("The file could not be read");
+//         fs::write("test2.txt", file_content).expect("The file could not be read");
+//     }
+// }
