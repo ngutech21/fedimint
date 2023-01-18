@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::KIND;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct StorageConfig {
     /// Contains all configuration that will be encrypted such as private key material
     pub private: StorageConfigPrivate,
@@ -17,12 +17,12 @@ pub struct StorageConfig {
     pub consensus: StorageConfigConsensus,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct StorageConfigConsensus {
     pub something: u64,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct StorageConfigPrivate {
     pub something_private: u64,
 }

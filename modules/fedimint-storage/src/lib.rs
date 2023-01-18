@@ -30,6 +30,7 @@ use crate::config::{StorageConfig, StorageConfigConsensus, StorageConfigPrivate}
 pub mod common;
 pub mod config;
 pub mod db;
+use tracing::{debug, info};
 
 const KIND: ModuleKind = ModuleKind::from_static_str("storage");
 
@@ -287,6 +288,7 @@ impl ServerModule for StorageModule {
             api_endpoint! {
             "/store_data",
             async |module: &StorageModule, dbtx, params: (String,String)| -> String {
+                info!("/store_data called with params {:?}", &params);
                 let result = module.store(&mut dbtx, params.0, params.1).await; // FIXME use result
                 dbtx.commit_tx().await.expect("DB Error");
                 Ok(result.unwrap().0)
@@ -316,7 +318,7 @@ impl StorageModule {
     ) -> Result<UUIDKey, StorageError> {
         let value = StringValue(value);
         let key = UUIDKey::from(key);
-        println!("Storing {:?} {:?}", &key, &value);
+        debug!("Storing {:?} {:?}", &key, &value);
         let result = dbtx
             .insert_entry(&key, &value)
             .await
@@ -330,7 +332,7 @@ impl StorageModule {
         dbtx: &mut DatabaseTransaction<'_>,
         param: String,
     ) -> Result<String, StorageError> {
-        println!("Retrieving {}", param);
+        debug!("Retrieving {}", param);
         let value = dbtx
             .get_value(&UUIDKey::from(param))
             .await

@@ -1,10 +1,6 @@
 use fedimint_api::{db::Database, module::registry::ModuleDecoderRegistry};
 use fedimint_rocksdb::RocksDb;
-use fedimint_storage::{
-    config::{StorageConfig, StorageConfigConsensus, StorageConfigPrivate},
-    StorageModule,
-};
-use serde_json::json;
+use fedimint_storage::{config::StorageConfig, StorageModule};
 
 fn open_temp_db(temp_path: &str) -> RocksDb {
     let path = tempfile::Builder::new()
@@ -15,25 +11,12 @@ fn open_temp_db(temp_path: &str) -> RocksDb {
     RocksDb::open(path).unwrap()
 }
 
-#[test]
-fn json_test() {
-    println!("Hello, world!");
-    let _v = json!("a string");
-    //let result = serde_json::from_str::<serde_json::Value>(r#" {"param": "1"} "#).unwrap();
-    let result = serde_json::from_str::<serde_json::Value>(r#" 1  "#).unwrap();
-    println!("result: {:?}", result);
-}
-
+// FIXME test must create file in temp dir
 #[test_log::test(tokio::test)]
 async fn store_and_retrieve_test() {
     let rocks_db = open_temp_db("store_and_retrieve_test");
 
-    let cfg = StorageConfig {
-        private: StorageConfigPrivate {
-            something_private: 42,
-        },
-        consensus: StorageConfigConsensus { something: 108 },
-    };
+    let cfg = StorageConfig::default();
 
     let mdr = ModuleDecoderRegistry::default();
     let db = Database::new(rocks_db, mdr);
