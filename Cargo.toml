@@ -27,6 +27,7 @@ members = [
     "modules/fedimint-wallet",
     "integrationtests",
     "fedimint-build",
+    "storage-server",
 ]
 resolver = "2"
 
@@ -42,7 +43,6 @@ homepage = "https://fedimint.org"
 repository = "https://github.com/fedimint/fedimint"
 license-file = "LICENSE"
 keywords = ["bitcoin", "lightning", "chaumian", "e-cash", "federated"]
-
 
 [profile.dev]
 split-debuginfo = "packed"
