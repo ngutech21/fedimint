@@ -84,6 +84,15 @@ impl StorageClient {
         }
     }
 
+    pub async fn retrieve_data_raw(&self, key: String) -> Result<Vec<u8>, StorageClientError> {
+        // FIXME
+        match self.context.api.retrieve_data(key).await {
+            Ok(res) => Ok(self.decode_base64(res)),
+
+            Err(e) => Err(StorageClientError::ApiError(e)),
+        }
+    }
+
     pub fn read_file_as_base64(&self, file_name: PathBuf) -> String {
         let file_content = fs::read(file_name).expect("The file could not be read");
         general_purpose::STANDARD_NO_PAD.encode(file_content)
@@ -94,6 +103,12 @@ impl StorageClient {
             .decode(base64_content)
             .expect("The file could not be read");
         fs::write(file_name, file_content).expect("The file could not be read");
+    }
+
+    pub fn decode_base64(&self, base64_content: String) -> Vec<u8> {
+        general_purpose::STANDARD_NO_PAD
+            .decode(base64_content)
+            .unwrap()
     }
 }
 

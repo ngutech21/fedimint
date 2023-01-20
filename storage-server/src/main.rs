@@ -1,11 +1,9 @@
-use std::path::PathBuf;
 use std::sync::Arc;
 
-use axum::extract::Path;
-use axum::{routing::get, Json, Router};
+use axum::extract::{Path, State};
+use axum::{routing::get, Router};
 use hyper::Method;
 use mint_client::storage::StorageClient;
-use serde::Serialize;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace::TraceLayer;
 use tracing::{event, Level};
@@ -15,13 +13,6 @@ mod client;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let client = client::create_client_module();
-
-    client
-        .retrieve_data(
-            "1dcda432-54d8-479f-bd73-da38ac56c29f".to_string(),
-            PathBuf::from("test123"),
-        )
-        .await?;
 
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
@@ -53,10 +44,10 @@ fn app(storage_client: StorageClient) -> Router {
         .layer(TraceLayer::new_for_http())
 }
 
-async fn get_storage(Path(_id): Path<i32>) -> Json<StorageItem> {
-    let st = StorageItem("1234-22345-8779".to_string());
-    Json(st)
+async fn get_storage(
+    Path(id): Path<String>,
+    State(storage_client): State<Arc<StorageClient>>,
+) -> Vec<u8> {
+    storage_client.retrieve_data_raw(id).await.unwrap()
+    // FIXME error handling
 }
-
-#[derive(Serialize)]
-pub struct StorageItem(pub String);
