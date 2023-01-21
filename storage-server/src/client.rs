@@ -18,54 +18,30 @@ pub fn create_client_module() -> StorageClient {
         federation_id: FederationId(auth_pk),
         epoch_pk: threshold_crypto::SecretKey::random().public_key(),
         auth_pk,
-        nodes: create_nodes(),
+        nodes: create_nodes(&[18174, 18184, 18194, 18204]),
         modules: [].into(),
     };
-    let ws_api = DynFederationApi::from(api::WsFederationApi::from_config(&client_config));
-
-    let mem_db = Database::new(MemDatabase::new(), module_decode_stubs());
 
     StorageClient {
         config: StorageClientConfig { something: 1234 },
         context: Arc::new(ClientContext {
-            api: ws_api,
-            db: mem_db,
+            api: DynFederationApi::from(api::WsFederationApi::from_config(&client_config)),
+            db: Database::new(MemDatabase::new(), module_decode_stubs()),
             secp: secp256k1_zkp::Secp256k1::new(),
         }),
     }
 }
 
-fn create_nodes() -> Vec<ApiEndpoint> {
-    vec![
-        ApiEndpoint {
-            url: url::Url::parse("ws://localhost:18174").unwrap(),
-            name: "server-0".to_string(),
-        },
-        ApiEndpoint {
-            url: url::Url::parse("ws://localhost:18184").unwrap(),
-            name: "server-1".to_string(),
-        },
-        ApiEndpoint {
-            url: url::Url::parse("ws://localhost:18194").unwrap(),
-            name: "server-2".to_string(),
-        },
-        ApiEndpoint {
-            url: url::Url::parse("ws://localhost:18204").unwrap(),
-            name: "server-3".to_string(),
-        },
-    ]
+fn create_nodes(ports: &[u32]) -> Vec<ApiEndpoint> {
+    ports
+        .into_iter()
+        .map(|port| ApiEndpoint {
+            url: url::Url::parse(&format!("ws://localhost:{}", port)).unwrap(),
+            name: format!("server-{}", port).to_string(),
+        })
+        .collect::<Vec<_>>()
 }
 
 fn module_decode_stubs() -> ModuleDecoderRegistry {
-    ModuleDecoderRegistry::from_iter([
-        // (
-        //     LEGACY_HARDCODED_INSTANCE_ID_LN,
-        //     Decoder::from_typed(LightningModuleDecoder),
-        // ),
-        // (
-        //     LEGACY_HARDCODED_INSTANCE_ID_WALLET,
-        //     Decoder::from_typed(WalletModuleDecoder),
-        // ),
-        (3, Decoder::from_typed(StorageModuleDecoder)),
-    ])
+    ModuleDecoderRegistry::from_iter([(3, Decoder::from_typed(StorageModuleDecoder))])
 }
