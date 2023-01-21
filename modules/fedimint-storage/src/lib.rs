@@ -106,11 +106,6 @@ impl ModuleInit for StorageConfigGenerator {
         _params: &ConfigGenParams,
         _task_group: &mut TaskGroup,
     ) -> anyhow::Result<Cancellable<ServerModuleConfig>> {
-        // FIXME
-        // let _params = params
-        //     .get::<StorageConfigGenParams>()
-        //     .expect("Invalid storage params");
-
         let server = StorageConfig {
             private: StorageConfigPrivate {
                 something_private: 3,

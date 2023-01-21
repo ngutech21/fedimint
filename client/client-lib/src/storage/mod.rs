@@ -55,17 +55,12 @@ impl ClientModule for StorageClient {
 
 impl StorageClient {
     pub async fn store_data(&self, file: PathBuf) -> Result<String, StorageClientError> {
-        dbg!(&file);
-
         let key = uuid::Uuid::new_v4().hyphenated().to_string();
-
         let content = self.read_file_as_base64(file);
-        dbg!(&content);
         match self.context.api.store_data(key.clone(), content).await {
             Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
-
         // FIXME use result
     }
 
@@ -85,10 +80,8 @@ impl StorageClient {
     }
 
     pub async fn retrieve_data_raw(&self, key: String) -> Result<Vec<u8>, StorageClientError> {
-        // FIXME
         match self.context.api.retrieve_data(key).await {
             Ok(res) => Ok(self.decode_base64(res)),
-
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
     }
@@ -112,6 +105,7 @@ impl StorageClient {
     }
 }
 
+// FIXME write tests
 // mod tests{
 
 //     use crate::api::DynFederationApi;

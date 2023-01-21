@@ -36,7 +36,8 @@ fn create_nodes(ports: &[u32]) -> Vec<ApiEndpoint> {
     ports
         .into_iter()
         .map(|port| ApiEndpoint {
-            url: url::Url::parse(&format!("ws://localhost:{}", port)).unwrap(),
+            url: url::Url::parse(&format!("ws://localhost:{}", port))
+                .expect("Failed to create URL"),
             name: format!("server-{}", port).to_string(),
         })
         .collect::<Vec<_>>()
