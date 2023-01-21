@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use axum::extract::{Path, State};
 use axum::{routing::get, Router};
+use axum_extra::routing::SpaRouter;
 use hyper::Method;
 use mint_client::storage::StorageClient;
 use tower_http::cors::{Any, CorsLayer};
@@ -38,8 +39,8 @@ async fn main() -> anyhow::Result<()> {
 
 fn app(storage_client: StorageClient) -> Router {
     Router::new()
+        .merge(SpaRouter::new("/", "assets").index_file("index.html"))
         .route("/api/v1/storage/:id", get(get_storage))
-        //.merge(SpaRouter::new("/", "frontend/dist/spa").index_file("index.html"))
         .with_state(Arc::new(storage_client))
         .layer(TraceLayer::new_for_http())
 }
