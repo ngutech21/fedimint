@@ -40,8 +40,14 @@
           </button>
         </div>
 
-        <div>
-          <img v-for="image in images" :src="image.url" />
+        <div class="card" style="width: 18rem" v-for="image in images">
+          <img class="card-img-top" :src="image.url" alt="Borat" />
+          <div class="card-body">
+            <h5 class="card-title">Borat</h5>
+            <p class="card-text">#images #memes</p>
+
+            <a :href="image.url" class="btn btn-primary">Download</a>&nbsp;
+          </div>
         </div>
       </div>
     </div>
