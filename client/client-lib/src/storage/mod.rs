@@ -115,29 +115,3 @@ impl StorageClient {
             .unwrap()
     }
 }
-
-// FIXME write tests
-// mod tests{
-
-//     use crate::api::DynFederationApi;
-
-//     use super::*;
-
-//     #[test]
-//     fn test_read_file_as_base64() {
-//         StorageClient{
-//             config: StorageClientConfig{
-//                 something: 42,
-//             },
-//             context: Arc::new(ClientContext{
-//                 api: DynFederationApi(Arc::new(FederationApiMock)))
-//             }),
-//         }.read_file_as_base64("dummy.txt".to_string());
-
-//         let file_content = fs::read("dummy.txt").expect("The file could not be read");
-//         let base = general_purpose::STANDARD_NO_PAD.encode(file_content);
-//         dbg!(base);
-//         let file_content = general_purpose::STANDARD_NO_PAD.decode(base).expect("The file could not be read");
-//         fs::write("test2.txt", file_content).expect("The file could not be read");
-//     }
-// }
