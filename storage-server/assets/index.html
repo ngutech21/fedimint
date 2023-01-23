@@ -59,13 +59,19 @@
           </button>
         </div> -->
 
-        <div class="card" style="width: 18rem" v-for="image in images">
-          <img class="card-img-top" :src="image.url" />
-          <div class="card-body">
-            <h5 class="card-title">Image</h5>
-            <p class="card-text">#images #memes</p>
+        <div class="d-flex flex-row flex-wrap">
+          <div
+            class="m-2 p-2 card"
+            style="width: 18rem"
+            v-for="image in images"
+          >
+            <img class="card-img-top" :src="image.url" />
+            <div class="card-body">
+              <h5 class="card-title">Image</h5>
+              <p class="card-text">#images #memes</p>
 
-            <a :href="image.url" class="btn btn-primary">Download</a>&nbsp;
+              <a :href="image.url" class="btn btn-primary">Download</a>&nbsp;
+            </div>
           </div>
         </div>
       </div>
@@ -117,5 +123,11 @@
         },
       }).mount("#app");
     </script>
+
+    <style type="text/css">
+      body {
+        background-color: #f3f3f3;
+      }
+    </style>
   </body>
 </html>
