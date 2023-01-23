@@ -242,7 +242,6 @@ impl ApiError {
 #[cfg_attr(not(target_family = "wasm"), async_trait)]
 impl<C: JsonRpcClient + Debug + Send + Sync> IFederationApi for WsFederationApi<C> {
     async fn store_data(&self, key: String, value: String) -> Result<String> {
-        println!("WSFederationAPI store_data");
         self.request(
             &format!("/module/{}/store_data", 3),
             (key, value),
@@ -252,7 +251,6 @@ impl<C: JsonRpcClient + Debug + Send + Sync> IFederationApi for WsFederationApi<
     }
 
     async fn retrieve_data(&self, key: String) -> Result<String> {
-        println!("WSFederationAPI retrieve_data");
         self.request(
             &format!("/module/{}/retrieve_data", 3),
             key,

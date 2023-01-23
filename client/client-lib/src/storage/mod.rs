@@ -61,7 +61,6 @@ impl StorageClient {
             Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
-        // FIXME use result
     }
 
     pub async fn store_data_raw(&self, raw_bytes: Vec<u8>) -> Result<String, StorageClientError> {
@@ -72,7 +71,6 @@ impl StorageClient {
             Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }
-        // FIXME use result
     }
 
     pub async fn retrieve_data(
@@ -98,20 +96,20 @@ impl StorageClient {
     }
 
     pub fn read_file_as_base64(&self, file_name: PathBuf) -> String {
-        let file_content = fs::read(file_name).expect("The file could not be read");
+        let file_content = fs::read(file_name).expect("Could not read file");
         general_purpose::STANDARD_NO_PAD.encode(file_content)
     }
 
     pub fn write_file_from_base64(&self, base64_content: String, file_name: PathBuf) {
         let file_content = general_purpose::STANDARD_NO_PAD
             .decode(base64_content)
-            .expect("The file could not be read");
-        fs::write(file_name, file_content).expect("The file could not be read");
+            .expect("Could not decode base64");
+        fs::write(file_name, file_content).expect("Could not write file");
     }
 
     pub fn decode_base64(&self, base64_content: String) -> Vec<u8> {
         general_purpose::STANDARD_NO_PAD
             .decode(base64_content)
-            .unwrap()
+            .expect("Could not decode base64")
     }
 }

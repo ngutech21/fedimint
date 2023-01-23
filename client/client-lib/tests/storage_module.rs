@@ -55,3 +55,13 @@ async fn test_store_and_retrieve() {
     assert!(res_retrieve.is_ok());
     assert_eq!(fixture, res_retrieve.unwrap());
 }
+
+#[tokio::test]
+async fn test_retrieve_key_not_found() {
+    let client = create_client_module();
+    let key = "key not found".to_string();
+
+    let res_retrieve = client.retrieve_data_raw(key).await;
+    assert!(res_retrieve.is_err());
+    dbg!(res_retrieve.unwrap_err());
+}

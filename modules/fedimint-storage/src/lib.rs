@@ -16,7 +16,7 @@ use fedimint_api::module::__reexports::serde_json;
 use fedimint_api::module::audit::Audit;
 use fedimint_api::module::interconnect::ModuleInterconect;
 use fedimint_api::module::{
-    api_endpoint, ApiEndpoint, InputMeta, ModuleError, ModuleInit, TransactionItemAmount,
+    api_endpoint, ApiEndpoint, ApiError, InputMeta, ModuleError, ModuleInit, TransactionItemAmount,
 };
 use fedimint_api::net::peers::MuxPeerConnections;
 use fedimint_api::server::DynServerModule;
@@ -284,15 +284,15 @@ impl ServerModule for StorageModule {
             "/store_data",
             async |module: &StorageModule, dbtx, params: (String,String)| -> String {
                 info!("/store_data called with params {:?}", &params);
-                let result = module.store(&mut dbtx, params.0, params.1).await; // FIXME use result
+                let result = module.store(&mut dbtx, params.0, params.1).await;
                 dbtx.commit_tx().await.expect("DB Error");
-                Ok(result.unwrap().0)
+                Ok(result.0)
             }
             },
             api_endpoint! {
             "/retrieve_data",
             async |module: &StorageModule, _dbtx, key: String| -> String {
-                Ok(module.retrieve(&mut _dbtx, key).await.expect("Could not retrieve data"))
+                module.retrieve(&mut _dbtx, key).await.ok_or_else(|| ApiError::not_found("Key not found".to_string()))
             }
             },
         ]
@@ -309,36 +309,34 @@ impl StorageModule {
         dbtx: &mut DatabaseTransaction<'_>,
         key: String,
         value: String,
-    ) -> Result<UUIDKey, StorageError> {
+    ) -> UUIDKey {
         let value = StringValue(value);
         let key = UUIDKey::from(key);
         debug!("Storing {:?} {:?}", &key, &value);
-        let result = dbtx
-            .insert_entry(&key, &value)
+        dbtx.insert_entry(&key, &value)
             .await
             .expect("Could not insert entry");
-        dbg!(&result);
-        Ok(key)
+        key
     }
 
-    // FIXME error handling
     pub async fn retrieve(
         &self,
         dbtx: &mut DatabaseTransaction<'_>,
         param: String,
-    ) -> Result<String, StorageError> {
+    ) -> Option<String> {
         debug!("Retrieving {}", param);
         let value = dbtx
             .get_value(&UUIDKey::from(param))
             .await
-            .expect("Could not get entry");
-        dbg!(&value);
-        Ok(value.unwrap().0)
+            .expect("DBError");
+        match value {
+            Some(StringValue(value)) => Some(value),
+            _ => None,
+        }
     }
 }
 
 // Must be unique.
-// TODO: we need to provide guidence for allocating these
 pub const MODULE_KEY_STORAGE: u16 = 128;
 plugin_types_trait_impl!(
     MODULE_KEY_STORAGE,
