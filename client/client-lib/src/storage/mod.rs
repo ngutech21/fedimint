@@ -1,6 +1,6 @@
-use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::{fs, str::Bytes};
 
 use base64::{engine::general_purpose, Engine as _};
 use fedimint_api::{
@@ -58,6 +58,17 @@ impl StorageClient {
         let key = uuid::Uuid::new_v4().hyphenated().to_string();
         let content = self.read_file_as_base64(file);
         match self.context.api.store_data(key.clone(), content).await {
+            Ok(_) => Ok(key),
+            Err(e) => Err(StorageClientError::ApiError(e)),
+        }
+        // FIXME use result
+    }
+
+    pub async fn store_data_raw(&self, raw_bytes: Vec<u8>) -> Result<String, StorageClientError> {
+        let key = uuid::Uuid::new_v4().hyphenated().to_string();
+        let file_content = general_purpose::STANDARD_NO_PAD.encode(raw_bytes);
+
+        match self.context.api.store_data(key.clone(), file_content).await {
             Ok(_) => Ok(key),
             Err(e) => Err(StorageClientError::ApiError(e)),
         }

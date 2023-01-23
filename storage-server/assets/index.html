@@ -14,6 +14,7 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <div id="app">
@@ -22,6 +23,24 @@
 
       <div class="container">
         <div class="input-group mb-3">
+          <input
+            accept="image/*"
+            type="file"
+            @change="onFileChange"
+            class="form-control"
+          />
+          <button
+            type="submit"
+            value="Upload file"
+            @click="uploadFile"
+            class="btn btn-outline-primary"
+          >
+            Upload Image
+          </button>
+        </div>
+        <p></p>
+
+        <!-- <div class="input-group mb-3">
           <input
             type="text"
             v-model="imageid"
@@ -38,7 +57,7 @@
           >
             Search
           </button>
-        </div>
+        </div> -->
 
         <div class="card" style="width: 18rem" v-for="image in images">
           <img class="card-img-top" :src="image.url" alt="Borat" />
@@ -53,13 +72,17 @@
     </div>
 
     <script type="module">
-      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+      import {
+        createApp,
+        ref,
+      } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
 
       createApp({
         data() {
           return {
             images: [],
             imageid: "",
+            selectedFile: "",
           };
         },
         methods: {
@@ -68,19 +91,31 @@
               url: "/api/v1/storage/" + this.imageid,
             });
           },
+          async onFileChange(e) {
+            this.selectedFile = e.target.files[0];
+            console.log("selected file", this.selectedFile);
+          },
+          async uploadFile() {
+            const formData = new FormData();
+            formData.append("file", this.selectedFile);
+
+            try {
+              const response = await axios.post("/api/v1/storage", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              console.log(response);
+
+              this.images.push({
+                url: "/api/v1/storage/" + response.data,
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          },
         },
       }).mount("#app");
     </script>
-
-    <!-- <img
-      src="http://localhost:8080/api/v1/storage/56aa83bc-0a29-457f-8346-765ae53513a1"
-      alt="Borat"
-    />
-    -->
-    <!-- create upload file form-->
-    <!--<form action="upload.php" method="post" enctype="multipart/form-data">
-      <input type="file" name="fileToUpload" id="fileToUpload" />
-      <input type="submit" value="Upload File" name="submit" />
-    </form> -->
   </body>
 </html>
