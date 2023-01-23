@@ -2,6 +2,7 @@ use fedimint_api::db::DatabaseKeyPrefixConst;
 use fedimint_api::encoding::{Decodable, Encodable};
 use serde::Serialize;
 use strum_macros::EnumIter;
+use uuid::Uuid;
 
 #[repr(u8)]
 #[derive(Clone, EnumIter, Debug)]
@@ -20,9 +21,7 @@ pub struct UUIDKey(pub String);
 
 impl UUIDKey {
     pub fn new() -> Self {
-        let my_uuid = uuid::Uuid::new_v4();
-        let urn = my_uuid.hyphenated().to_string();
-        Self(urn)
+        Self(Uuid::new_v4().hyphenated().to_string())
     }
 }
 

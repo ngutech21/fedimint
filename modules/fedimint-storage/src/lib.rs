@@ -300,7 +300,6 @@ impl ServerModule for StorageModule {
 }
 
 impl StorageModule {
-    /// Create new module instance
     pub fn new(cfg: StorageConfig) -> StorageModule {
         StorageModule { cfg }
     }
@@ -322,6 +321,7 @@ impl StorageModule {
         Ok(key)
     }
 
+    // FIXME error handling
     pub async fn retrieve(
         &self,
         dbtx: &mut DatabaseTransaction<'_>,
