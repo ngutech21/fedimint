@@ -1,6 +1,6 @@
+use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::{fs, str::Bytes};
 
 use base64::{engine::general_purpose, Engine as _};
 use fedimint_api::{

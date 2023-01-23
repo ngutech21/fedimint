@@ -70,5 +70,5 @@ async fn post_storage(
 
         return Json(key);
     }
-    Json("".to_string())
+    Json("Invalid request".to_string())
 }
