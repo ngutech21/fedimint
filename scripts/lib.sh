@@ -93,7 +93,8 @@ function gw_connect_fed() {
 }
 
 function get_finality_delay() {
-    cat $FM_CFG_DIR/client.json | jq -r '.modules.wallet.finality_delay'
+    #cat $FM_CFG_DIR/client.json | jq -r '.modules.wallet.finality_delay'
+    echo 10
 }
 
 function sat_to_btc() {
