@@ -49,7 +49,7 @@ do
   fed_port=$(echo "$BASE_PORT + $ID * 10" | bc -l)
   api_port=$(echo "$BASE_PORT + $ID * 10 + 1" | bc -l)
   export FM_PASSWORD="pass$ID"
-  $FM_BIN_DIR/distributedgen create-cert --p2p-url ws://localhost:$fed_port --api-url ws://localhost:$api_port --out-dir $FM_CFG_DIR/server-$ID --name "Server-$ID"
+  $FM_BIN_DIR/distributedgen create-cert --p2p-url ws://127.0.0.1:$fed_port --api-url ws://127.0.0.1:$api_port --out-dir $FM_CFG_DIR/server-$ID --name "Server-$ID"
   CERTS="$CERTS,$(cat $FM_CFG_DIR/server-$ID/tls-cert)"
 done
 CERTS=${CERTS:1}
@@ -65,7 +65,7 @@ done
 wait
 
 # Move the client config to root dir
-mv $FM_CFG_DIR/server-0/client.json $FM_CFG_DIR/
+mv $FM_CFG_DIR/server-0/client* $FM_CFG_DIR/
 
 # Define clients
 export FM_LN1="lightning-cli --network regtest --lightning-dir=$FM_LN1_DIR"
@@ -80,7 +80,7 @@ export FM_DISTRIBUTEDGEN="$FM_BIN_DIR/distributedgen"
 # Alias clients
 alias ln1="\$FM_LN1"
 alias ln2="\$FM_LN2"
-alias btc_client="\$FM_BTC_CLIENT"
+alias bitcoin-cli="\$FM_BTC_CLIENT"
 alias mint_client="\$FM_MINT_CLIENT"
 alias mint_rpc_client="\$FM_MINT_RPC_CLIENT"
 alias gateway-cli="\$FM_GATEWAY_CLI"

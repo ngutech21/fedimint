@@ -1,49 +1,62 @@
 # shellcheck shell=bash
 
+export LEGACY_HARDCODED_INSTANCE_ID_WALLET="2"
+
 function mine_blocks() {
     PEG_IN_ADDR="$($FM_BTC_CLIENT getnewaddress)"
     $FM_BTC_CLIENT generatetoaddress $1 $PEG_IN_ADDR
 }
 
 function open_channel() {
-    LN_ADDR="$($FM_LN1 newaddr | jq -r '.bech32')"
+    LN_ADDR="$($FM_LN1 newaddr | jq -e -r '.bech32')"
     $FM_BTC_CLIENT sendtoaddress $LN_ADDR 1
     mine_blocks 10
-    FM_LN2_PUB_KEY="$($FM_LN2 getinfo | jq -r '.id')"
+    FM_LN2_PUB_KEY="$($FM_LN2 getinfo | jq -e -r '.id')"
     export FM_LN2_PUB_KEY
-    FM_LN1_PUB_KEY="$($FM_LN1 getinfo | jq -r '.id')"
+    FM_LN1_PUB_KEY="$($FM_LN1 getinfo | jq -e -r '.id')"
     export FM_LN1_PUB_KEY
     $FM_LN1 connect $FM_LN2_PUB_KEY@127.0.0.1:9001
     until $FM_LN1 -k fundchannel id=$FM_LN2_PUB_KEY amount=0.1btc push_msat=5000000000; do sleep $POLL_INTERVAL; done
     mine_blocks 10
-    until [[ $($FM_LN1 listpeers | jq -r ".peers[] | select(.id == \"$FM_LN2_PUB_KEY\") | .channels[0].state") = "CHANNELD_NORMAL" ]]; do sleep $POLL_INTERVAL; done
+    until [[ $($FM_LN1 listpeers | jq -e -r ".peers[] | select(.id == \"$FM_LN2_PUB_KEY\") | .channels[0].state") = "CHANNELD_NORMAL" ]]; do sleep $POLL_INTERVAL; done
 }
 
 function await_bitcoin_rpc() {
-    until $FM_BTC_CLIENT getblockchaininfo; do
-        sleep $POLL_INTERVAL
+    until $FM_BTC_CLIENT getblockchaininfo 1>/dev/null 2>/dev/null ; do
+        >&2 echo "Bitcoind rpc not ready yet. Waiting ..."
+        sleep "$POLL_INTERVAL"
     done
 }
 
 function await_cln_rpc() {
-    until [ -e $FM_LN1_DIR/regtest/lightning-rpc ]; do
-        sleep $POLL_INTERVAL
+    until [ -e "$FM_LN1_DIR/regtest/lightning-rpc" ]; do
+        >&2 echo "LN gateway 1 not ready yet. Waiting ..."
+        sleep "$POLL_INTERVAL"
     done
-    until [ -e $FM_LN2_DIR/regtest/lightning-rpc ]; do
-        sleep $POLL_INTERVAL
+    until [ -e "$FM_LN2_DIR/regtest/lightning-rpc" ]; do
+        >&2 echo "LN gateway 2 not ready yet. Waiting ..."
+        sleep "$POLL_INTERVAL"
     done
 }
 
 function await_fedimint_block_sync() {
-  FINALITY_DELAY=$(get_finality_delay)
-  EXPECTED_BLOCK_HEIGHT="$(( $($FM_BTC_CLIENT getblockchaininfo | jq -r '.blocks') - $FINALITY_DELAY ))"
-  echo "Node at ${EXPECTED_BLOCK_HEIGHT}H"
-  $FM_MINT_CLIENT wait-block-height $EXPECTED_BLOCK_HEIGHT
-  echo "Mint at ${EXPECTED_BLOCK_HEIGHT}H"
+  local node_height
+  local finality_delay
+  local expected_block_height
+
+  node_height="$($FM_BTC_CLIENT getblockchaininfo | jq -e -r '.blocks')"
+  finality_delay="$(get_finality_delay)"
+  expected_block_height="$((node_height - finality_delay))"
+
+  echo "Node at ${node_height}H"
+
+  if [ 0 -lt $expected_block_height ]; then
+      $FM_MINT_CLIENT wait-block-height $expected_block_height
+  fi
 }
 
 function await_all_peers() {
-  $FM_MINT_CLIENT api /wallet/block_height
+  $FM_MINT_CLIENT api /module/${LEGACY_HARDCODED_INSTANCE_ID_WALLET}/block_height
 }
 
 function await_server_on_port() {
@@ -56,16 +69,16 @@ function await_server_on_port() {
 # Check that core-lightning block-proccessing is caught up
 # CLI integration tests should call this before attempting to pay invoices
 function await_cln_block_processing() {
-  EXPECTED_BLOCK_HEIGHT="$($FM_BTC_CLIENT getblockchaininfo | jq -r '.blocks')"
+  EXPECTED_BLOCK_HEIGHT="$($FM_BTC_CLIENT getblockchaininfo | jq -e -r '.blocks')"
 
   # ln1
-  until [ $EXPECTED_BLOCK_HEIGHT == "$($FM_LN1 getinfo | jq -r '.blockheight')" ]
+  until [ $EXPECTED_BLOCK_HEIGHT == "$($FM_LN1 getinfo | jq -e -r '.blockheight')" ]
   do
       sleep $POLL_INTERVAL
   done
 
   # ln2
-  until [ $EXPECTED_BLOCK_HEIGHT == "$($FM_LN2 getinfo | jq -r '.blockheight')" ]
+  until [ $EXPECTED_BLOCK_HEIGHT == "$($FM_LN2 getinfo | jq -e -r '.blockheight')" ]
   do
       sleep $POLL_INTERVAL
   done
@@ -74,27 +87,26 @@ function await_cln_block_processing() {
 # Function for killing processes stored in FM_PID_FILE
 function kill_fedimint_processes {
   # shellcheck disable=SC2046
-  kill $(cat $FM_PID_FILE | sed '1!G;h;$!d') #sed reverses the order here
-  pkill "ln_gateway" || true;
-  rm $FM_PID_FILE
+  kill $(cat $FM_PID_FILE | sed '1!G;h;$!d') 2>/dev/null #sed reverses the order here
+  pkill "ln_gateway" 2>/dev/null || true;
+  rm -f $FM_PID_FILE
 }
 
 function start_gateway() {
-  $FM_GATEWAY_CLI generate-config '127.0.0.1:8175' 'http://127.0.0.1:8175' $FM_CFG_DIR # generate gateway config
-  $FM_LN1 -k plugin subcommand=start plugin=$FM_BIN_DIR/ln_gateway fedimint-cfg=$FM_CFG_DIR &
+  $FM_GATEWAY_CLI generate-config '127.0.0.1:8175' 'http://127.0.0.1:8175' $FM_CFG_DIR/gateway # generate gateway config
+  $FM_LN1 -k plugin subcommand=start plugin=$FM_BIN_DIR/ln_gateway fedimint-cfg=$FM_CFG_DIR/gateway &
   sleep 5 # wait for plugin to start
   gw_connect_fed
 }
 
 function gw_connect_fed() {
   # connect federation with the gateway
-  FM_CONNECT_STR="$($FM_MINT_CLIENT connect-info | jq -r '.connect_info')"
+  FM_CONNECT_STR="$($FM_MINT_CLIENT connect-info | jq -e -r '.connect_info')"
   $FM_GATEWAY_CLI connect-fed "$FM_CONNECT_STR"
 }
 
 function get_finality_delay() {
-    #cat $FM_CFG_DIR/client.json | jq -r '.modules.wallet.finality_delay'
-    echo 10
+    cat $FM_CFG_DIR/client.json | jq -e -r ".modules.\"${LEGACY_HARDCODED_INSTANCE_ID_WALLET}\".finality_delay"
 }
 
 function sat_to_btc() {
@@ -132,7 +144,7 @@ function get_raw_transaction() {
 }
 
 function get_federation_id() {
-    cat $FM_CFG_DIR/client.json | jq -r '.federation_id'
+    cat $FM_CFG_DIR/client.json | jq -e -r '.federation_id'
 }
 
 function show_verbose_output()
@@ -143,4 +155,10 @@ function show_verbose_output()
     else
         cat
     fi
+}
+
+function await_gateway_registered() {
+    until [ "$($FM_MINT_CLIENT list-gateways | jq -e ".num_gateways")" -gt "0" ]; do
+        sleep $POLL_INTERVAL
+    done
 }
