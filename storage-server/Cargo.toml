@@ -7,6 +7,10 @@ license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "storage-server"
+path = "src/main.rs"
+
 [dependencies]
 mint-client = { path = "../client/client-lib" }
 fedimint-storage = { path = "../modules/fedimint-storage" }
