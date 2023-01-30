@@ -207,7 +207,7 @@ impl<T: AsRef<ClientConfig> + Clone> Client<T> {
     }
 
     pub fn storage_client(&self) -> StorageClient {
-        let st = StorageClient {
+        StorageClient {
             config: self
                 .config
                 .as_ref()
@@ -215,12 +215,7 @@ impl<T: AsRef<ClientConfig> + Clone> Client<T> {
                 .expect("needs storage module client config")
                 .1,
             context: self.context.clone(),
-        };
-
-        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        dbg!(self.config.as_ref());
-        dbg!(&st);
-        st
+        }
     }
 
     pub fn mint_client(&self) -> MintClient {

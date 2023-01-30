@@ -247,9 +247,7 @@ enum Command {
     },
 
     /// Pay a lightning invoice via a gateway
-    LnPay {
-        bolt11: lightning_invoice::Invoice,
-    },
+    LnPay { bolt11: lightning_invoice::Invoice },
 
     /// Fetch (re-)issued notes and finalize issuance process
     Fetch,
@@ -266,22 +264,16 @@ enum Command {
     },
 
     /// Wait for incoming invoice to be paid
-    WaitInvoice {
-        invoice: lightning_invoice::Invoice,
-    },
+    WaitInvoice { invoice: lightning_invoice::Invoice },
 
     /// Wait for the fed to reach a consensus block height
-    WaitBlockHeight {
-        height: u64,
-    },
+    WaitBlockHeight { height: u64 },
 
     /// Config enabling client to establish websocket connection to federation
     ConnectInfo,
 
     /// Join a federation using it's ConnectInfo
-    JoinFederation {
-        connect: String,
-    },
+    JoinFederation { connect: String },
 
     /// List registered gateways
     ListGateways,
@@ -310,14 +302,11 @@ enum Command {
     #[clap(hide = true)]
     WipeNotes,
 
-    StoreData {
-        file: PathBuf,
-    },
+    /// Store a file in the federation
+    StoreData { file: PathBuf },
 
-    RetrieveData {
-        key: String,
-        file: PathBuf,
-    },
+    /// Retrieve a file that is stored in the federation
+    RetrieveData { key: String, file: PathBuf },
 }
 
 trait ErrorHandler<T, E> {

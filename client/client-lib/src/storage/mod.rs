@@ -2,7 +2,6 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use base64::{engine::general_purpose, Engine as _};
 use fedimint_api::{
     core::client::ClientModule, module::TransactionItemAmount, Amount, ServerModule,
 };
@@ -65,7 +64,8 @@ impl StorageClient {
 
     pub async fn store_data_raw(&self, raw_bytes: Vec<u8>) -> Result<String, StorageClientError> {
         let key = uuid::Uuid::new_v4().hyphenated().to_string();
-        let file_content = general_purpose::STANDARD_NO_PAD.encode(raw_bytes);
+
+        let file_content = base64::encode(raw_bytes);
 
         match self.context.api.store_data(key.clone(), file_content).await {
             Ok(_) => Ok(key),
@@ -97,19 +97,15 @@ impl StorageClient {
 
     pub fn read_file_as_base64(&self, file_name: PathBuf) -> String {
         let file_content = fs::read(file_name).expect("Could not read file");
-        general_purpose::STANDARD_NO_PAD.encode(file_content)
+        base64::encode(file_content)
     }
 
     pub fn write_file_from_base64(&self, base64_content: String, file_name: PathBuf) {
-        let file_content = general_purpose::STANDARD_NO_PAD
-            .decode(base64_content)
-            .expect("Could not decode base64");
+        let file_content = base64::decode(base64_content).expect("Could not decode base64");
         fs::write(file_name, file_content).expect("Could not write file");
     }
 
     pub fn decode_base64(&self, base64_content: String) -> Vec<u8> {
-        general_purpose::STANDARD_NO_PAD
-            .decode(base64_content)
-            .expect("Could not decode base64")
+        base64::decode(base64_content).expect("Could not decode base64")
     }
 }
