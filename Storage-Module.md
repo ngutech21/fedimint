@@ -1,5 +1,10 @@
 # Abstract
-The storage-module adds a storage layer to the fedimint network. It can be used to store images, videos, documents, etc. Files can either be stored and retrieved by a command line client (cli) or by using the storage-server. The storage-server provides a Rest-API and a simple web interface to access the storage-module.
+The storage-module adds a storage layer to fedimint. It can be used to store images, videos, documents, etc. Files can either be stored and retrieved by a command line client (cli) or by using the storage-server. The storage-server crate provides a Rest-API and a simple web interface to access the storage-module.
+
+Possible usecases are:
+* Store profilepics, memes and other images that are publicly available
+* Backup important documents like contracts, invoices, sharded private keys, etc.
+* Let the users pay using lightning
 
 
 
@@ -33,6 +38,7 @@ fedimint-cli get-data 17fc82aa-d3f1-478c-947d-aa2736578ec2 output.txt
 
 ## Storage-Server
 The storage-server is a http server that can be used to store and retrieve files. It is a simple wrapper around the client-module and provides a Rest-API and a simple web interface to access the storage-module.
+![screenshot of the storageming webapp](Storagemint-startpage.jpg)
 
 ```
 cd storage-server

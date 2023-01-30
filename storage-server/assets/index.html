@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
   <head>
     <meta charset="utf-8" />
     <title>Storage Server</title>
@@ -18,16 +18,18 @@
   </head>
   <body>
     <div id="app">
-      <div class="display-6 text-center">Storage Server</div>
+      <div class="display-6 text-center">Storagemint</div>
+      <div class="display-7 text-center">Store your images in a federation</div>
       <p></p>
 
       <div class="container">
-        <div class="input-group mb-3">
+        <div class="input-group mb-1">
           <input
             accept="image/*"
             type="file"
             @change="onFileChange"
             class="form-control"
+            lang="en-US"
           />
           <button
             type="submit"
@@ -40,6 +42,7 @@
         </div>
         <p></p>
 
+        <!-- Searchbar -->
         <!-- <div class="input-group mb-3">
           <input
             type="text"
@@ -67,10 +70,10 @@
           >
             <img class="card-img-top" :src="image.url" />
             <div class="card-body">
-              <h5 class="card-title">Image</h5>
-              <p class="card-text">#images #memes</p>
-
               <a :href="image.url" class="btn btn-primary">Download</a>&nbsp;
+              <a :href="image.url" target="_blank" download="image.jpg"
+                >Permalink</a
+              >
             </div>
           </div>
         </div>
