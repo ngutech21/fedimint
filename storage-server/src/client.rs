@@ -34,11 +34,11 @@ pub fn create_client_module() -> StorageClient {
 
 fn create_nodes(ports: &[u32]) -> Vec<ApiEndpoint> {
     ports
-        .into_iter()
+        .iter()
         .map(|port| ApiEndpoint {
             url: url::Url::parse(&format!("ws://localhost:{}", port))
                 .expect("Failed to create URL"),
-            name: format!("server-{}", port).to_string(),
+            name: format!("server-{}", port),
         })
         .collect::<Vec<_>>()
 }

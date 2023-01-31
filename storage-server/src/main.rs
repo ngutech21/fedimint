@@ -61,7 +61,7 @@ async fn post_storage(
     mut multipart: Multipart,
 ) -> Json<String> {
     // FIXME error handling
-    while let Some(field) = multipart.next_field().await.unwrap() {
+    if let Some(field) = multipart.next_field().await.unwrap() {
         let file_name = field.file_name().unwrap().to_string();
         let data = field.bytes().await.unwrap();
         let bytes = data.into_iter().collect::<Vec<u8>>();
