@@ -1,5 +1,5 @@
-# Abstract
-The storage-module adds a storage layer to fedimint. It can be used to store images, videos, documents, etc. Files can either be stored and retrieved by a command line client (cli) or by using the storage-server. The storage-server crate provides a Rest-API and a simple web interface to access the stored data.
+# Storagemint
+The storage-module adds the capability of storing files for users. It can be used to store images, videos, documents, etc. Files can either be stored and retrieved by a command line client (cli) or by using the storage-server. The storage-server crate provides a Rest-API and a simple web interface to access the stored data.
 
 Possible usecases:
 * Store torrent trackerfiles, profilepics, memes and other images that are publicly available 
