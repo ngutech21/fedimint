@@ -53,7 +53,7 @@ cd storage-server
 cargo run
 ```
 
-open browser and go to http://127.0.0.1:8080
+open browser and go to <span>http://127.0.0.1:8080</span>
 
 ![screenshot of the storageming webapp](Storagemint-startpage.jpg)
 
