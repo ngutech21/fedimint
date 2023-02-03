@@ -225,10 +225,12 @@ async fn post_guardians(
 struct UrlConnection {
     ro_bitcoin_rpc_type: &'static str,
     ro_bitcoin_rpc_url: String,
+    num_guardians: u32,
+    guardian_name: String,
 }
 
 async fn params_page(
-    axum::extract::State(_state): axum::extract::State<MutableState>,
+    axum::extract::State(state): axum::extract::State<MutableState>,
 ) -> UrlConnection {
     let (ro_bitcoin_rpc_type, ro_bitcoin_rpc_url) =
         match fedimint_api::bitcoin_rpc::read_bitcoin_backend_from_global_env() {
@@ -242,9 +244,15 @@ async fn params_page(
             }
             Err(e) => ("error", e.to_string()),
         };
+
+    let state = state.lock().await;
+
+    let presets = state.presets.clone();
     UrlConnection {
         ro_bitcoin_rpc_type,
         ro_bitcoin_rpc_url,
+        num_guardians: presets.guardians_count.unwrap_or_else(|| 0),
+        guardian_name: presets.guardian_name.unwrap_or_else(|| "".to_string()),
     }
 }
 
@@ -270,6 +278,14 @@ pub struct ParamsForm {
     /// The number of confirmations a deposit transaction requires before accepted by the
     /// federation
     block_confirmations: u32,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct FederationPreset {
+    /// Our node name, must be unique among peers
+    pub guardian_name: Option<String>,
+    /// How many participants in federation consensus
+    pub guardians_count: Option<u32>,
 }
 
 #[debug_handler]
@@ -362,6 +378,7 @@ struct State {
     dkg_task_group: Option<TaskGroup>,
     module_gens: ModuleGenRegistry,
     dkg_state: Option<DkgState>,
+    presets: FederationPreset,
 }
 type MutableState = Arc<Mutex<State>>;
 
@@ -385,6 +402,7 @@ pub async fn run_ui(
     password: String,
     task_group: TaskGroup,
     module_gens: ModuleGenRegistry,
+    presets: FederationPreset,
 ) {
     let state = Arc::new(Mutex::new(State {
         params: None,
@@ -395,6 +413,7 @@ pub async fn run_ui(
         dkg_task_group: None,
         module_gens,
         dkg_state: None,
+        presets,
     }));
 
     let app = Router::new()

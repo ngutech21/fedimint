@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use fedimint_api::config::ModuleGenRegistry;
 use fedimint_api::db::Database;
 use fedimint_api::module::DynModuleGen;
@@ -13,8 +13,8 @@ use fedimint_server::consensus::FedimintConsensus;
 use fedimint_server::FedimintServer;
 use fedimint_wallet::WalletGen;
 use fedimintd::encrypt::*;
-use fedimintd::ui::run_ui;
 use fedimintd::ui::UiMessage;
+use fedimintd::ui::{run_ui, FederationPreset};
 use fedimintd::*;
 use futures::FutureExt;
 use tokio::select;
@@ -38,6 +38,12 @@ pub struct ServerOpts {
     /// Port to run admin UI on
     #[arg(long = "listen-ui", env = "FM_LISTEN_UI")]
     pub listen_ui: Option<SocketAddr>,
+    /// Default value for the number of guardians
+    #[arg(long = "number-of-guardians", env = "NUMBER_OF_GUARDIANS")]
+    pub num_guardians: Option<u32>,
+    /// Default value for guardian-name
+    #[arg(long = "guardian-name", env = "GUARDIAN_NAME")]
+    pub guardian_name: Option<String>,
     #[cfg(feature = "telemetry")]
     #[clap(long)]
     pub with_telemetry: bool,
@@ -167,6 +173,10 @@ async fn run(opts: ServerOpts, mut task_group: TaskGroup) -> anyhow::Result<()> 
                     password,
                     ui_task_group,
                     module_gens,
+                    FederationPreset {
+                        guardians_count: opts.num_guardians,
+                        guardian_name: opts.guardian_name,
+                    },
                 )
                 .await;
             })
