@@ -251,8 +251,8 @@ async fn params_page(
     UrlConnection {
         ro_bitcoin_rpc_type,
         ro_bitcoin_rpc_url,
-        num_guardians: presets.guardians_count.unwrap_or_else(|| 0),
-        guardian_name: presets.guardian_name.unwrap_or_else(|| "".to_string()),
+        num_guardians: presets.guardians_count.unwrap_or(0),
+        guardian_name: presets.guardian_name.unwrap_or_default(),
     }
 }
 
