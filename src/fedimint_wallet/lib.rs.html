@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `modules/fedimint-wallet/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-0ef3deca4ed45ad8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-f501212b8b071243.css"><link rel="stylesheet" disabled href="../../static.files/dark-e92fc12c34ff89d3.css"><link rel="stylesheet" disabled href="../../static.files/ayu-a0090c8b1ced384f.css"><script src="../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-364b95f387bc3166.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../fedimint_wallet/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `modules/fedimint-wallet/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-1def573a4779b29b.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-d59023bfa12059d2.css"><link rel="stylesheet" disabled href="../../static.files/dark-1ca41bb1e10af075.css"><link rel="stylesheet" disabled href="../../static.files/ayu-18b4181a2f3fb862.css"><script src="../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../fedimint_wallet/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1747,13 +1747,6 @@
 <a href="#1747" id="1747">1747</a>
 <a href="#1748" id="1748">1748</a>
 <a href="#1749" id="1749">1749</a>
-<a href="#1750" id="1750">1750</a>
-<a href="#1751" id="1751">1751</a>
-<a href="#1752" id="1752">1752</a>
-<a href="#1753" id="1753">1753</a>
-<a href="#1754" id="1754">1754</a>
-<a href="#1755" id="1755">1755</a>
-<a href="#1756" id="1756">1756</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::collections::{BTreeMap, HashMap, HashSet};
 <span class="kw">use </span>std::convert::{Infallible, TryInto};
 <span class="kw">use </span>std::ffi::{OsStr, OsString};
@@ -1771,42 +1764,40 @@
 <span class="kw">use </span>bitcoin::util::psbt::{Input, PartiallySignedTransaction};
 <span class="kw">use </span>bitcoin::util::sighash::SighashCache;
 <span class="kw">use </span>bitcoin::{
-    Address, AddressType, Amount, BlockHash, EcdsaSig, EcdsaSighashType, Network, Script,
-    Transaction, TxIn, TxOut, Txid,
+    Address, Amount, BlockHash, EcdsaSig, EcdsaSighashType, Network, PackedLockTime, Script,
+    Sequence, Transaction, TxIn, TxOut, Txid,
 };
-<span class="kw">use </span>bitcoin::{PackedLockTime, Sequence};
 <span class="kw">use </span>config::WalletConfigConsensus;
 <span class="kw">use </span>db::DbKeyPrefix;
-<span class="kw">use </span>fedimint_api::bitcoin_rpc::{
+<span class="kw">use </span>fedimint_bitcoind::DynBitcoindRpc;
+<span class="kw">use </span>fedimint_core::bitcoin_rpc::{
     select_bitcoin_backend_from_envs, BitcoinRpcBackendType, FM_BITCOIND_RPC_ENV,
     FM_ELECTRUM_RPC_ENV,
 };
-<span class="kw">use </span>fedimint_api::cancellable::{Cancellable, Cancelled};
-<span class="kw">use </span>fedimint_api::config::{
-    ConfigGenParams, DkgPeerMsg, ModuleGenParams, ServerModuleConfig, TypedServerModuleConfig,
+<span class="kw">use </span>fedimint_core::cancellable::{Cancellable, Cancelled};
+<span class="kw">use </span>fedimint_core::config::{
+    ConfigGenParams, DkgPeerMsg, ModuleConfigResponse, ModuleGenParams, ServerModuleConfig,
+    TypedServerModuleConfig, TypedServerModuleConsensusConfig,
 };
-<span class="kw">use </span>fedimint_api::config::{ModuleConfigResponse, TypedServerModuleConsensusConfig};
-<span class="kw">use </span>fedimint_api::core::{ModuleInstanceId, ModuleKind};
-<span class="kw">use </span>fedimint_api::db::{Database, DatabaseTransaction};
-<span class="kw">use </span>fedimint_api::encoding::{Decodable, Encodable, UnzipConsensus};
-<span class="kw">use </span>fedimint_api::module::__reexports::serde_json;
-<span class="kw">use </span>fedimint_api::module::audit::Audit;
-<span class="kw">use </span>fedimint_api::module::interconnect::ModuleInterconect;
-<span class="kw">use </span>fedimint_api::module::{
-    api_endpoint, ApiVersion, ConsensusProposal, CoreConsensusVersion, InputMeta, IntoModuleError,
-    ModuleConsensusVersion, ModuleGen, TransactionItemAmount,
+<span class="kw">use </span>fedimint_core::core::{ModuleInstanceId, ModuleKind};
+<span class="kw">use </span>fedimint_core::db::{Database, DatabaseTransaction, DatabaseVersion};
+<span class="kw">use </span>fedimint_core::encoding::{Decodable, Encodable, UnzipConsensus};
+<span class="kw">use </span>fedimint_core::module::__reexports::serde_json;
+<span class="kw">use </span>fedimint_core::module::audit::Audit;
+<span class="kw">use </span>fedimint_core::module::interconnect::ModuleInterconect;
+<span class="kw">use </span>fedimint_core::module::{
+    api_endpoint, ApiEndpoint, ApiVersion, ConsensusProposal, CoreConsensusVersion, InputMeta,
+    IntoModuleError, ModuleConsensusVersion, ModuleError, ModuleGen, TransactionItemAmount,
 };
-<span class="kw">use </span>fedimint_api::module::{ApiEndpoint, ModuleError};
-<span class="kw">use </span>fedimint_api::net::peers::MuxPeerConnections;
-<span class="kw">use </span>fedimint_api::server::DynServerModule;
+<span class="kw">use </span>fedimint_core::net::peers::MuxPeerConnections;
+<span class="kw">use </span>fedimint_core::server::DynServerModule;
 <span class="attr">#[cfg(not(target_family = <span class="string">&quot;wasm&quot;</span>))]
-</span><span class="kw">use </span>fedimint_api::task::sleep;
-<span class="kw">use </span>fedimint_api::task::{TaskGroup, TaskHandle};
-<span class="kw">use </span>fedimint_api::{
+</span><span class="kw">use </span>fedimint_core::task::sleep;
+<span class="kw">use </span>fedimint_core::task::{TaskGroup, TaskHandle};
+<span class="kw">use </span>fedimint_core::{
     plugin_types_trait_impl, push_db_key_items, push_db_pair_items, Feerate, NumPeers, OutPoint,
     PeerId, ServerModule,
 };
-<span class="kw">use </span>fedimint_bitcoind::DynBitcoindRpc;
 <span class="kw">use </span>futures::{stream, StreamExt};
 <span class="kw">use </span>impl_tools::autoimpl;
 <span class="kw">use </span>miniscript::psbt::PsbtExt;
@@ -1869,7 +1860,8 @@
 
 <span class="attr">#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Encodable, Decodable)]
 </span><span class="kw">pub struct </span>RoundConsensusItem {
-    <span class="kw">pub </span>block_height: u32, <span class="comment">// FIXME: use block hash instead, but needs more complicated verification logic
+    <span class="kw">pub </span>block_height: u32, <span class="comment">/* FIXME: use block hash instead, but needs more complicated
+                            * verification logic */
     </span><span class="kw">pub </span>fee_rate: Feerate,
     <span class="kw">pub </span>randomness: [u8; <span class="number">32</span>],
 }
@@ -1925,7 +1917,8 @@
     }
 }
 
-<span class="doccomment">/// A PSBT that is awaiting enough signatures from the federation to becoming a `PendingTransaction`
+<span class="doccomment">/// A PSBT that is awaiting enough signatures from the federation to becoming a
+/// `PendingTransaction`
 </span><span class="attr">#[derive(Clone, Debug, Encodable, Decodable)]
 </span><span class="kw">pub struct </span>UnsignedTransaction {
     <span class="kw">pub </span>psbt: PartiallySignedTransaction,
@@ -1976,7 +1969,8 @@
     <span class="kw">pub </span>fees: PegOutFees,
 }
 
-<span class="doccomment">/// Contains the Bitcoin transaction id of the transaction created by the withdraw request
+<span class="doccomment">/// Contains the Bitcoin transaction id of the transaction created by the
+/// withdraw request
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, Encodable, Decodable)]
 </span><span class="kw">pub struct </span>WalletOutputOutcome(<span class="kw">pub </span>bitcoin::Txid);
 
@@ -1992,6 +1986,7 @@
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>ModuleGen <span class="kw">for </span>WalletGen {
     <span class="kw">const </span>KIND: ModuleKind = KIND;
+    <span class="kw">const </span>DATABASE_VERSION: DatabaseVersion = DatabaseVersion(<span class="number">0</span>);
     <span class="kw">type </span>Decoder = WalletDecoder;
 
     <span class="kw">fn </span>decoder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WalletDecoder {
@@ -2274,8 +2269,8 @@
         <span class="comment">// TODO: implement retry logic in case bitcoind is temporarily unreachable
         </span><span class="kw">let </span>our_target_height = <span class="self">self</span>.target_height().<span class="kw">await</span>;
 
-        <span class="comment">// In case the wallet just got created the height is not committed to the DB yet but will
-        // be set to 0 first, so we can assume that here.
+        <span class="comment">// In case the wallet just got created the height is not committed to the DB yet
+        // but will be set to 0 first, so we can assume that here.
         </span><span class="kw">let </span>last_consensus_height = <span class="self">self</span>.consensus_height(dbtx).<span class="kw">await</span>.unwrap_or(<span class="number">0</span>);
 
         <span class="kw">let </span>proposed_height = <span class="kw">if </span>our_target_height &gt;= last_consensus_height {
@@ -2316,7 +2311,8 @@
             .collect::&lt;Vec&lt;WalletConsensusItem&gt;&gt;()
             .<span class="kw">await</span>;
 
-        <span class="comment">// We force new epochs only if height changed, or we have peg-outs (more than just round_ci item)
+        <span class="comment">// We force new epochs only if height changed, or we have peg-outs (more than
+        // just round_ci item)
         </span><span class="kw">if </span>last_consensus_height &lt; proposed_height || <span class="number">1 </span>&lt; items.len() {
             ConsensusProposal::Trigger(items)
         } <span class="kw">else </span>{
@@ -2331,8 +2327,9 @@
     ) {
         <span class="macro">trace!</span>(<span class="question-mark">?</span>consensus_items, <span class="string">&quot;Received consensus proposals&quot;</span>);
 
-        <span class="comment">// Separate round consensus items from signatures for peg-out tx. While signatures can be
-        // processed separately, all round consensus items need to be available at once.
+        <span class="comment">// Separate round consensus items from signatures for peg-out tx. While
+        // signatures can be processed separately, all round consensus items
+        // need to be available at once.
         </span><span class="kw">let </span>UnzipWalletConsensusItem {
             peg_out_signature: peg_out_signatures,
             round_consensus,
@@ -2409,7 +2406,7 @@
 
         <span class="prelude-val">Ok</span>(InputMeta {
             amount: TransactionItemAmount {
-                amount: fedimint_api::Amount::from_sats(input.tx_output().value),
+                amount: fedimint_core::Amount::from_sats(input.tx_output().value),
                 fee: <span class="self">self</span>.cfg.consensus.fee_consensus.peg_in_abs,
             },
             puk_keys: <span class="macro">vec!</span>[<span class="kw-2">*</span>input.tweak_contract_key()],
@@ -2446,7 +2443,10 @@
         dbtx: <span class="kw-2">&amp;mut </span>DatabaseTransaction,
         output: <span class="kw-2">&amp;</span>WalletOutput,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;TransactionItemAmount, ModuleError&gt; {
-        <span class="kw">if </span>!is_address_valid_for_network(<span class="kw-2">&amp;</span>output.recipient, <span class="self">self</span>.cfg.consensus.network) {
+        <span class="kw">if </span>!output
+            .recipient
+            .is_valid_for_network(<span class="self">self</span>.cfg.consensus.network)
+        {
             <span class="kw">return </span><span class="prelude-val">Err</span>(WalletError::WrongNetwork(
                 <span class="self">self</span>.cfg.consensus.network,
                 output.recipient.network,
@@ -2474,7 +2474,7 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
         dbtx: <span class="kw-2">&amp;mut </span>DatabaseTransaction&lt;<span class="lifetime">&#39;b</span>&gt;,
         output: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>WalletOutput,
-        out_point: fedimint_api::OutPoint,
+        out_point: fedimint_core::OutPoint,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;TransactionItemAmount, ModuleError&gt; {
         <span class="kw">let </span>amount = <span class="self">self</span>.validate_output(dbtx, output).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="macro">debug!</span>(
@@ -2590,9 +2590,10 @@
 
             <span class="kw">match </span><span class="self">self</span>.finalize_peg_out_psbt(<span class="kw-2">&amp;mut </span>psbt, change) {
                 <span class="prelude-val">Ok</span>(pending_tx) =&gt; {
-                    <span class="comment">// We were able to finalize the transaction, so we will delete the PSBT and instead keep the
-                    // extracted tx for periodic transmission and to accept the change into our wallet
-                    // eventually once it confirms.
+                    <span class="comment">// We were able to finalize the transaction, so we will delete the PSBT and
+                    // instead keep the extracted tx for periodic transmission
+                    // and to accept the change into our wallet eventually once
+                    // it confirms.
                     </span>dbtx.insert_new_entry(<span class="kw-2">&amp;</span>PendingTransactionKey(key.<span class="number">0</span>), <span class="kw-2">&amp;</span>pending_tx)
                         .<span class="kw">await
                         </span>.expect(<span class="string">&quot;DB Error&quot;</span>);
@@ -2844,9 +2845,10 @@
         psbt: <span class="kw-2">&amp;mut </span>PartiallySignedTransaction,
         change: Amount,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;PendingTransaction, ProcessPegOutSigError&gt; {
-        <span class="comment">// We need to save the change output&#39;s tweak key to be able to access the funds later on.
-        // The tweak is extracted here because the psbt is moved next and not available anymore
-        // when the tweak is actually needed in the end to be put into the batch on success.
+        <span class="comment">// We need to save the change output&#39;s tweak key to be able to access the funds
+        // later on. The tweak is extracted here because the psbt is moved next
+        // and not available anymore when the tweak is actually needed in the
+        // end to be put into the batch on success.
         </span><span class="kw">let </span>change_tweak: [u8; <span class="number">32</span>] = psbt
             .outputs
             .iter()
@@ -3020,8 +3022,8 @@
         }
     }
 
-    <span class="doccomment">/// Add a change UTXO to our spendable UTXO database after it was included in a block that we
-    /// got consensus on.
+    <span class="doccomment">/// Add a change UTXO to our spendable UTXO database after it was included
+    /// in a block that we got consensus on.
     </span><span class="kw">async fn </span>recognize_change_utxo&lt;<span class="lifetime">&#39;a</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         dbtx: <span class="kw-2">&amp;mut </span>DatabaseTransaction&lt;<span class="lifetime">&#39;a</span>&gt;,
@@ -3131,9 +3133,11 @@
     ) -&gt; <span class="prelude-ty">Option</span>&lt;UnsignedTransaction&gt; {
         <span class="comment">// When building a transaction we need to take care of two things:
         //  * We need enough input amount to fund all outputs
-        //  * We need to keep an eye on the tx weight so we can factor the fees into out calculation
-        // We then go on to calculate the base size of the transaction `total_weight` and the
-        // maximum weight per added input which we will add every time we select an input.
+        //  * We need to keep an eye on the tx weight so we can factor the fees into out
+        //    calculation
+        // We then go on to calculate the base size of the transaction `total_weight`
+        // and the maximum weight per added input which we will add every time
+        // we select an input.
         </span><span class="kw">let </span>change_script = <span class="self">self</span>.derive_script(change_tweak);
         <span class="kw">let </span>out_weight = (destination.len() * <span class="number">4 </span>+ <span class="number">1 </span>+ <span class="number">32
             </span><span class="comment">// Add change script weight, it&#39;s very likely to be needed if not we just overpay in fees
@@ -3172,7 +3176,8 @@
             </span>}
         }
 
-        <span class="comment">// We always pay ourselves change back to ensure that we don&#39;t lose anything due to dust
+        <span class="comment">// We always pay ourselves change back to ensure that we don&#39;t lose anything due
+        // to dust
         </span><span class="kw">let </span>change = total_selected_value - fees - peg_out_amount;
         <span class="kw">let </span>output: Vec&lt;TxOut&gt; = <span class="macro">vec!</span>[
             TxOut {
@@ -3215,7 +3220,8 @@
         };
         <span class="macro">info!</span>(txid = %transaction.txid(), <span class="string">&quot;Creating peg-out tx&quot;</span>);
 
-        <span class="comment">// FIXME: use custom data structure that guarantees more invariants and only convert to PSBT for finalization
+        <span class="comment">// FIXME: use custom data structure that guarantees more invariants and only
+        // convert to PSBT for finalization
         </span><span class="kw">let </span>psbt = PartiallySignedTransaction {
             unsigned_tx: transaction,
             version: <span class="number">0</span>,
@@ -3288,22 +3294,13 @@
             .enumerate()
         {
             <span class="kw">let </span>tweaked_secret = {
-                <span class="kw">let </span>tweak_pk_bytes = psbt_input
+                <span class="kw">let </span>tweak = psbt_input
                     .proprietary
                     .get(<span class="kw-2">&amp;</span>proprietary_tweak_key())
                     .expect(<span class="string">&quot;Malformed PSBT: expected tweak&quot;</span>);
-                <span class="kw">let </span>pub_key = secp256k1::PublicKey::from_secret_key(<span class="self">self</span>.secp, <span class="self">self</span>.secret_key);
 
-                <span class="kw">let </span>tweak = {
-                    <span class="kw">let </span><span class="kw-2">mut </span>hasher = HmacEngine::&lt;sha256::Hash&gt;::new(<span class="kw-2">&amp;</span>pub_key.serialize()[..]);
-                    hasher.input(<span class="kw-2">&amp;</span>tweak_pk_bytes[..]);
-                    Hmac::from_engine(hasher).into_inner()
-                };
-
-                <span class="self">self</span>.secret_key
-                    .add_tweak(<span class="kw-2">&amp;</span>Scalar::from_be_bytes(tweak).expect(<span class="string">&quot;can&#39;t fail&quot;</span>))
-                    .expect(<span class="string">&quot;Tweaking priv key failed&quot;</span>) <span class="comment">// TODO: why could this happen?
-            </span>};
+                <span class="self">self</span>.secret_key.tweak(tweak, <span class="self">self</span>.secp)
+            };
 
             <span class="kw">let </span>tx_hash = tx_hasher
                 .segwit_signature_hash(
@@ -3391,24 +3388,13 @@
     }
 }
 
-<span class="kw">pub fn </span>is_address_valid_for_network(address: <span class="kw-2">&amp;</span>Address, network: Network) -&gt; bool {
-    <span class="kw">match </span>(address.network, address.address_type()) {
-        (Network::Testnet, <span class="prelude-val">Some</span>(AddressType::P2pkh))
-        | (Network::Testnet, <span class="prelude-val">Some</span>(AddressType::P2sh)) =&gt; {
-            [Network::Testnet, Network::Regtest, Network::Signet].contains(<span class="kw-2">&amp;</span>network)
-        }
-        (Network::Testnet, <span class="kw">_</span>) =&gt; [Network::Testnet, Network::Signet].contains(<span class="kw-2">&amp;</span>network),
-        (addr_net, <span class="kw">_</span>) =&gt; addr_net == network,
-    }
-}
-
 <span class="attr">#[instrument(level = <span class="string">&quot;debug&quot;</span>, skip_all)]
 </span><span class="kw">pub async fn </span>run_broadcast_pending_tx(db: Database, rpc: DynBitcoindRpc, tg_handle: <span class="kw-2">&amp;</span>TaskHandle) {
     <span class="kw">while </span>!tg_handle.is_shutting_down() {
         broadcast_pending_tx(db.begin_transaction().<span class="kw">await</span>, <span class="kw-2">&amp;</span>rpc).<span class="kw">await</span>;
         <span class="comment">// FIXME: remove after modularization finishes
         </span><span class="attr">#[cfg(not(target_family = <span class="string">&quot;wasm&quot;</span>))]
-        </span>fedimint_api::task::sleep(Duration::from_secs(<span class="number">10</span>)).<span class="kw">await</span>;
+        </span>fedimint_core::task::sleep(Duration::from_secs(<span class="number">10</span>)).<span class="kw">await</span>;
     }
 }
 
@@ -3452,7 +3438,7 @@
 <span class="kw">impl </span>Eq <span class="kw">for </span>PegOutSignatureItem {}
 
 <span class="macro">plugin_types_trait_impl!</span>(
-    fedimint_api::core::MODULE_KEY_WALLET,
+    fedimint_core::core::MODULE_KEY_WALLET,
     WalletInput,
     WalletOutput,
     WalletOutputOutcome,
@@ -3511,4 +3497,4 @@
 <span class="doccomment">/// **WARNING**: this is only intended to be used for testing
 </span><span class="kw">impl </span>Eq <span class="kw">for </span>WalletError {}
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="fedimint_wallet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (8996ea93b 2023-02-09)" data-search-js="search-28136cea55c34037.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="fedimint_wallet" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (0416b1a6f 2023-02-14)" data-search-js="search-14421e1532aead08.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

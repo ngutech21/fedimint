@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `modules/fedimint-ln/src/contracts/incoming.rs`."><title>incoming.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-0ef3deca4ed45ad8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-f501212b8b071243.css"><link rel="stylesheet" disabled href="../../../static.files/dark-e92fc12c34ff89d3.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-a0090c8b1ced384f.css"><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-364b95f387bc3166.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../fedimint_ln/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `modules/fedimint-ln/src/contracts/incoming.rs`."><title>incoming.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-1def573a4779b29b.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-d59023bfa12059d2.css"><link rel="stylesheet" disabled href="../../../static.files/dark-1ca41bb1e10af075.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-18b4181a2f3fb862.css"><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../fedimint_ln/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -105,14 +105,20 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::io::Error;
 
-<span class="kw">use </span>bitcoin_hashes::hash_newtype;
 <span class="kw">use </span>bitcoin_hashes::sha256::Hash <span class="kw">as </span>Sha256;
-<span class="kw">use </span>bitcoin_hashes::Hash <span class="kw">as </span>BitcoinHash;
-<span class="kw">use </span>fedimint_api::encoding::{Decodable, DecodeError, Encodable};
-<span class="kw">use </span>fedimint_api::module::registry::ModuleDecoderRegistry;
-<span class="kw">use </span>fedimint_api::OutPoint;
+<span class="kw">use </span>bitcoin_hashes::{hash_newtype, Hash <span class="kw">as </span>BitcoinHash};
+<span class="kw">use </span>fedimint_core::encoding::{Decodable, DecodeError, Encodable};
+<span class="kw">use </span>fedimint_core::module::registry::ModuleDecoderRegistry;
+<span class="kw">use </span>fedimint_core::OutPoint;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="kw">use </span><span class="kw">crate</span>::contracts::{ContractId, DecryptedPreimage, EncryptedPreimage, IdentifyableContract};
@@ -120,7 +126,7 @@
 <span class="attr">#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, Encodable, Decodable)]
 </span><span class="kw">pub struct </span>IncomingContractOffer {
     <span class="doccomment">/// Amount for which the user is willing to sell the preimage
-    </span><span class="kw">pub </span>amount: fedimint_api::Amount,
+    </span><span class="kw">pub </span>amount: fedimint_core::Amount,
     <span class="kw">pub </span>hash: bitcoin_hashes::sha256::Hash,
     <span class="kw">pub </span>encrypted_preimage: EncryptedPreimage,
     <span class="kw">pub </span>expiry_time: <span class="prelude-ty">Option</span>&lt;u64&gt;,
@@ -132,29 +138,34 @@
     }
 }
 
-<span class="comment">// FIXME: the protocol currently envisions the use of a pub key as preimage. This is bad for privacy
-// though since pub keys are distinguishable from randomness and the payer would learn the recipient
-// is using a federated mint. Probably best to just hash the key before.
+<span class="comment">// FIXME: the protocol currently envisions the use of a pub key as preimage.
+// This is bad for privacy though since pub keys are distinguishable from
+// randomness and the payer would learn the recipient is using a federated mint.
+// Probably best to just hash the key before.
 
 // FIXME: encrypt preimage to LN gateway?
 
 </span><span class="doccomment">/// Specialized smart contract for incoming payments
 ///
-/// A user generates a private/public keypair that can later be used to claim the incoming funds.
-/// The public key is the defined as the preimage of a payment has and threshold-encrypted to the
-/// federation&#39;s public key. They then put up the encrypted preimage for sale by creating an
+/// A user generates a private/public keypair that can later be used to claim
+/// the incoming funds. The public key is the defined as the preimage of a
+/// payment has and threshold-encrypted to the federation&#39;s public key. They
+/// then put up the encrypted preimage for sale by creating an
 /// [`IncomingContractOffer`].
 ///
-/// A lightning gateway wanting to claim an incoming HTLC can now use the offer to buy the preimage
-/// by transferring funds into the corresponding contract. This activates the threshold decryption
-/// process inside the federation. Since the user could have threshold-encrypted useless data there
-/// are two possible outcomes:
+/// A lightning gateway wanting to claim an incoming HTLC can now use the offer
+/// to buy the preimage by transferring funds into the corresponding contract.
+/// This activates the threshold decryption process inside the federation. Since
+/// the user could have threshold-encrypted useless data there are two possible
+/// outcomes:
 ///
-///   1. The decryption results in a valid preimage which is given to the lightning gateway. The
-///      user can in return claim the funds from the contract. For this they need to be able to sign
-///      with the private key corresponding to the public key which they used as preimage.
-///   2. The decryption results in an invalid preimage, the gateway can claim back the money. For
-///      this to work securely they have to specify a public key when creating the actual contract.
+///   1. The decryption results in a valid preimage which is given to the
+/// lightning gateway. The      user can in return claim the funds from the
+/// contract. For this they need to be able to sign      with the private key
+/// corresponding to the public key which they used as preimage.
+///   2. The decryption results in an invalid preimage, the gateway can claim
+/// back the money. For      this to work securely they have to specify a public
+/// key when creating the actual contract.
 </span><span class="comment">// TODO: don&#39;t duplicate offer, include id instead and fetch offer on mint side
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, Encodable, Decodable)]
 </span><span class="kw">pub struct </span>IncomingContract {
@@ -162,24 +173,27 @@
     </span><span class="kw">pub </span>hash: bitcoin_hashes::sha256::Hash,
     <span class="doccomment">/// Encrypted preimage as specified in offer
     </span><span class="kw">pub </span>encrypted_preimage: EncryptedPreimage,
-    <span class="doccomment">/// Status of preimage decryption, will either end in failure or contain the preimage
-    /// eventually. In case decryption was successful the preimage is also the public key locking
-    /// the contract, allowing the offer creator to redeem their money.
+    <span class="doccomment">/// Status of preimage decryption, will either end in failure or contain the
+    /// preimage eventually. In case decryption was successful the preimage
+    /// is also the public key locking the contract, allowing the offer
+    /// creator to redeem their money.
     </span><span class="kw">pub </span>decrypted_preimage: DecryptedPreimage,
     <span class="doccomment">/// Key that can unlock contract in case the decrypted preimage was invalid
     </span><span class="kw">pub </span>gateway_key: secp256k1::XOnlyPublicKey,
 }
 
-<span class="doccomment">/// The funded version of an [`IncomingContract`] contains the [`OutPoint`] of it&#39;s creation. Since
-/// this kind of contract can only be funded once this out point is unambiguous. The out point is
-/// used to update the output outcome once decryption finishes.
+<span class="doccomment">/// The funded version of an [`IncomingContract`] contains the [`OutPoint`] of
+/// it&#39;s creation. Since this kind of contract can only be funded once this out
+/// point is unambiguous. The out point is used to update the output outcome
+/// once decryption finishes.
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq, Hash, Encodable, Decodable, Serialize, Deserialize)]
 </span><span class="kw">pub struct </span>FundedIncomingContract {
     <span class="kw">pub </span>contract: IncomingContract,
-    <span class="doccomment">/// Incoming contracts are funded exactly once, so they have an associated out-point. We use it
-    /// to report the outcome of the preimage decryption started by the funding in the output&#39;s
-    /// outcome (This can already be queried by users, making an additional way of querying contract
-    /// states unnecessary for now).
+    <span class="doccomment">/// Incoming contracts are funded exactly once, so they have an associated
+    /// out-point. We use it to report the outcome of the preimage
+    /// decryption started by the funding in the output&#39;s outcome (This can
+    /// already be queried by users, making an additional way of querying
+    /// contract states unnecessary for now).
     </span><span class="kw">pub </span>out_point: OutPoint,
 }
 
@@ -213,4 +227,4 @@
     }
 }
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="fedimint_ln" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (8996ea93b 2023-02-09)" data-search-js="search-28136cea55c34037.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="fedimint_ln" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (0416b1a6f 2023-02-14)" data-search-js="search-14421e1532aead08.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

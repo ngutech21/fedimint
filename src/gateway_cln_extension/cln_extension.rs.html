@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `gateway/ln-gateway/src/bin/cln_extension.rs`."><title>cln_extension.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-0ef3deca4ed45ad8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-f501212b8b071243.css"><link rel="stylesheet" disabled href="../../static.files/dark-e92fc12c34ff89d3.css"><link rel="stylesheet" disabled href="../../static.files/ayu-a0090c8b1ced384f.css"><script src="../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-364b95f387bc3166.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../gateway_cln_extension/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `gateway/ln-gateway/src/bin/cln_extension.rs`."><title>cln_extension.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-1def573a4779b29b.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-d59023bfa12059d2.css"><link rel="stylesheet" disabled href="../../static.files/dark-1ca41bb1e10af075.css"><link rel="stylesheet" disabled href="../../static.files/ayu-18b4181a2f3fb862.css"><script src="../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../gateway_cln_extension/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -440,32 +440,61 @@
 <a href="#440" id="440">440</a>
 <a href="#441" id="441">441</a>
 <a href="#442" id="442">442</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::{
-    array::TryFromSliceError, collections::HashMap, net::SocketAddr, path::PathBuf, str::FromStr,
-    sync::Arc, time::Duration,
-};
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
+<a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+</pre><pre class="rust"><code><span class="kw">use </span>std::array::TryFromSliceError;
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::net::SocketAddr;
+<span class="kw">use </span>std::path::PathBuf;
+<span class="kw">use </span>std::str::FromStr;
+<span class="kw">use </span>std::sync::Arc;
+<span class="kw">use </span>std::time::Duration;
 
 <span class="kw">use </span>anyhow::anyhow;
-<span class="kw">use </span>bitcoin_hashes::{hex::ToHex, sha256, Hash};
+<span class="kw">use </span>bitcoin_hashes::hex::ToHex;
+<span class="kw">use </span>bitcoin_hashes::{sha256, Hash};
 <span class="kw">use </span>clap::Parser;
 <span class="kw">use </span>cln_plugin::{options, Builder, Plugin};
-<span class="kw">use </span>cln_rpc::{model, ClnRpc};
-<span class="kw">use </span>fedimint_api::{task::TaskGroup, Amount};
+<span class="kw">use </span>cln_rpc::model;
+<span class="kw">use </span>fedimint_core::task::TaskGroup;
+<span class="kw">use </span>fedimint_core::Amount;
+<span class="kw">use </span>ln_gateway::gatewaylnrpc::complete_htlcs_request::{Action, Cancel, Settle};
+<span class="kw">use </span>ln_gateway::gatewaylnrpc::gateway_lightning_server::{
+    GatewayLightning, GatewayLightningServer,
+};
 <span class="kw">use </span>ln_gateway::gatewaylnrpc::{
-    complete_htlcs_request::{Action, Cancel, Settle},
-    gateway_lightning_server::{GatewayLightning, GatewayLightningServer},
     CompleteHtlcsRequest, CompleteHtlcsResponse, GetPubKeyRequest, GetPubKeyResponse,
     PayInvoiceRequest, PayInvoiceResponse, SubscribeInterceptHtlcsRequest,
     SubscribeInterceptHtlcsResponse,
 };
 <span class="kw">use </span>serde::{Deserialize, Deserializer, Serialize};
 <span class="kw">use </span>thiserror::Error;
-<span class="kw">use </span>tokio::{
-    io::{stdin, stdout},
-    sync::{mpsc, oneshot, Mutex},
-};
+<span class="kw">use </span>tokio::io::{stdin, stdout};
+<span class="kw">use </span>tokio::sync::{mpsc, oneshot, Mutex};
 <span class="kw">use </span>tokio_stream::wrappers::ReceiverStream;
-<span class="kw">use </span>tonic::{transport::Server, Status};
+<span class="kw">use </span>tonic::transport::Server;
+<span class="kw">use </span>tonic::Status;
 <span class="kw">use </span>tracing::{debug, error};
 
 <span class="attr">#[derive(Parser)]
@@ -475,8 +504,9 @@
     </span><span class="kw">pub </span>listen: SocketAddr,
 }
 
-<span class="comment">// Note: Once this binary is stable, we should be able to remove current &#39;ln_gateway&#39;
-// Use CLN_PLUGIN_LOG=&lt;log-level&gt; to enable debug logging from within cln-plugin
+<span class="comment">// Note: Once this binary is stable, we should be able to remove current
+// &#39;ln_gateway&#39; Use CLN_PLUGIN_LOG=&lt;log-level&gt; to enable debug logging from
+// within cln-plugin
 </span><span class="attr">#[tokio::main]
 </span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), anyhow::Error&gt; {
     <span class="kw">let </span>(service, listen) = ClnRpcService::new()
@@ -497,7 +527,8 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="doccomment">/// The core-lightning `htlc_accepted` event&#39;s `amount` field has a &quot;msat&quot; suffix
+<span class="doccomment">/// The core-lightning `htlc_accepted` event&#39;s `amount` field has a &quot;msat&quot;
+/// suffix
 </span><span class="kw">fn </span>as_fedimint_amount&lt;<span class="lifetime">&#39;de</span>, D&gt;(amount: D) -&gt; <span class="prelude-ty">Result</span>&lt;Amount, D::Error&gt;
 <span class="kw">where
     </span>D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
@@ -538,7 +569,7 @@
 
 <span class="attr">#[allow(dead_code)]
 </span><span class="kw">pub struct </span>ClnRpcService {
-    client: Arc&lt;Mutex&lt;ClnRpc&gt;&gt;,
+    socket: PathBuf,
     interceptor: Arc&lt;ClnHtlcInterceptor&gt;,
     task_group: TaskGroup,
 }
@@ -550,8 +581,9 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(plugin) = Builder::new(stdin(), stdout())
             .option(options::ConfigOption::new(
                 <span class="string">&quot;listen&quot;</span>,
-                <span class="comment">// Set an invalid default address in the extension to force the extension plugin user
-                // to supply a valid address via an environment variable or cln plugin config option.
+                <span class="comment">// Set an invalid default address in the extension to force the extension plugin
+                // user to supply a valid address via an environment variable or
+                // cln plugin config option.
                 </span>options::Value::String(<span class="string">&quot;default-dont-use&quot;</span>.into()),
                 <span class="string">&quot;gateway cln extension address&quot;</span>,
             ))
@@ -574,7 +606,6 @@
         </span>{
             <span class="kw">let </span>config = plugin.configuration();
             <span class="kw">let </span>socket = PathBuf::from(config.lightning_dir).join(config.rpc_file);
-            <span class="kw">let </span>client = ClnRpc::new(socket).<span class="kw">await</span>.expect(<span class="string">&quot;connect to ln_socket&quot;</span>);
 
             <span class="comment">// Parse configurations or read from
             </span><span class="kw">let </span>listen: SocketAddr = <span class="kw">match </span>ClnExtensionOpts::try_parse() {
@@ -596,7 +627,7 @@
 
             <span class="prelude-val">Ok</span>((
                 <span class="self">Self </span>{
-                    client: Arc::new(Mutex::new(client)),
+                    socket,
                     task_group: TaskGroup::new(),
                     interceptor,
                 },
@@ -608,6 +639,19 @@
             </span>)))
         }
     }
+
+    <span class="doccomment">/// Creates a new RPC client for a request.
+    ///
+    /// This operation is cheap enough to do it for each request since it merely
+    /// connects to a UNIX domain socket without doing any further
+    /// initialization.
+    </span><span class="kw">async fn </span>rpc_client(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;cln_rpc::ClnRpc, ClnExtensionError&gt; {
+        cln_rpc::ClnRpc::new(<span class="kw-2">&amp;</span><span class="self">self</span>.socket).<span class="kw">await</span>.map_err(|err| {
+            <span class="kw">let </span>e = <span class="macro">format!</span>(<span class="string">&quot;Could not connect to CLN RPC socket: {err}&quot;</span>);
+            <span class="macro">error!</span>(e);
+            ClnExtensionError::Error(<span class="macro">anyhow!</span>(e))
+        })
+    }
 }
 
 <span class="attr">#[tonic::async_trait]
@@ -616,9 +660,9 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _request: tonic::Request&lt;GetPubKeyRequest&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;tonic::Response&lt;GetPubKeyResponse&gt;, Status&gt; {
-        <span class="self">self</span>.client
-            .lock()
+        <span class="self">self</span>.rpc_client()
             .<span class="kw">await
+            </span>.map_err(|e| Status::internal(e.to_string()))<span class="question-mark">?
             </span>.call(cln_rpc::Request::Getinfo(
                 model::requests::GetinfoRequest {},
             ))
@@ -651,9 +695,9 @@
         } = request.into_inner();
 
         <span class="kw">let </span>outcome = <span class="self">self
-            </span>.client
-            .lock()
+            </span>.rpc_client()
             .<span class="kw">await
+            </span>.map_err(|e| Status::internal(e.to_string()))<span class="question-mark">?
             </span>.call(cln_rpc::Request::Pay(model::PayRequest {
                 bolt11: invoice,
                 amount_msat: <span class="prelude-val">None</span>,
@@ -740,7 +784,8 @@
                 }
             };
 
-            <span class="comment">// Send translated response to the HTLC interceptor for submission to the cln rpc
+            <span class="comment">// Send translated response to the HTLC interceptor for submission to the cln
+            // rpc
             </span><span class="kw">match </span>outcome.send(htlca_res) {
                 <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(tonic::Response::new(CompleteHtlcsResponse {}));
@@ -777,7 +822,8 @@
 <span class="comment">// BOLT 4: https://github.com/lightning/bolts/blob/master/04-onion-routing.md#failure-messages
 // 16399 error code reports unknown payment details.
 //
-// TODO: We should probably use a more specific error code based on htlc processing fail reason
+// TODO: We should probably use a more specific error code based on htlc
+// processing fail reason
 </span><span class="kw">fn </span>htlc_processing_failure() -&gt; serde_json::Value {
     <span class="macro">serde_json::json!</span>({
         <span class="string">&quot;result&quot;</span>: <span class="string">&quot;fail&quot;</span>,
@@ -818,8 +864,8 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(subscription) = <span class="self">self</span>.subscriptions.lock().<span class="kw">await</span>.get(<span class="kw-2">&amp;</span>short_channel_id) {
             <span class="kw">let </span>payment_hash = payload.htlc.payment_hash.to_vec();
 
-            <span class="comment">// This has a chance of collission since payment_hashes are not guaranteed to be unique
-            // TODO: generate unique id for each intercepted HTLC
+            <span class="comment">// This has a chance of collission since payment_hashes are not guaranteed to be
+            // unique TODO: generate unique id for each intercepted HTLC
             </span><span class="kw">let </span>intercepted_htlc_id = sha256::Hash::hash(<span class="kw-2">&amp;</span>payment_hash);
 
             <span class="kw">match </span>subscription
@@ -883,4 +929,4 @@
     <span class="comment">// TODO: Add a method to remove a HTLC subscriber
 </span>}
 </code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="gateway_cln_extension" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (8996ea93b 2023-02-09)" data-search-js="search-28136cea55c34037.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
+</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="gateway_cln_extension" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (0416b1a6f 2023-02-14)" data-search-js="search-14421e1532aead08.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
