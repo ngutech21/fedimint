@@ -257,9 +257,9 @@ impl Opts {
 
         let decoders = ModuleDecoderRegistry::new(cfg.clone().0.modules.into_iter().map(
             |(id, module_cfg)| {
-                let module_gen = module_gens
-                    .get(module_cfg.kind())
-                    .expect("module kind not found in registry");
+                let module_gen = module_gens.get(module_cfg.kind()).unwrap_or_else(|| {
+                    panic!("module kind not found in registry {:?}", module_cfg.kind())
+                });
                 (id, module_gen.as_ref().decoder())
             },
         ));
